@@ -98,11 +98,11 @@
   }
 
   function isTransferCategory(name) {
-    return name === 'Transfers' || name === 'Split' || categoryGroup(name) === 'Transfers' || categoryGroup(name) === 'System';
+    return name === 'Transfers' || name === 'Split' || categoryGroup(name) === 'Transfers' || categoryGroup(name) === 'Financial movements' || categoryGroup(name) === 'System';
   }
 
   function isBudgetCategory(category) {
-    return ['Income', 'Transfers', 'System', 'Review'].indexOf(String(category.Group || '')) === -1;
+    return ['Income', 'Incoming funds', 'Transfers', 'Financial movements', 'System', 'Review'].indexOf(String(category.Group || '')) === -1;
   }
 
   function budgetCategoryName(name) {

@@ -1,132 +1,56 @@
 const HOUSEHOLD_CATEGORY_TREE = [
-  { group: 'Income', colour: '#14855f', categories: [
-    ['Employment', ['Regular salary', 'Wages', 'Overtime', 'Bonus', 'Commission', 'Employment allowances']],
-    ['Business', ['Sales revenue', 'Consulting income', 'Contract income', 'Other business income']],
-    ['Government payments', ['Family assistance', 'Pension', 'JobSeeker', 'Carer payment', 'Other government payment']],
-    ['Investment income', ['Bank interest', 'Dividends', 'Trust distributions', 'Capital gains']],
-    ['Property income', ['Residential rent received', 'Commercial rent received', 'Short-stay income']],
-    ['Retirement income', ['Superannuation pension', 'Annuity income']],
-    ['Other income', ['Gifts received', 'Prizes received', 'Marketplace sales', 'Miscellaneous income']],
+  { group: 'Incoming funds', colour: '#14855f', categories: [
+    ['Employment income', ['Salary and wages', 'Overtime and bonuses']],
+    ['Benefits received', ['Pension', 'Centrelink allowances', 'Family Tax Benefit', 'Superannuation received']],
+    ['Child support received', []],
+    ['Sale of assets', ['Vehicle sale', 'Real estate sale', 'Other asset sale']],
+    ['Gifts received', []], ['Inheritance', []],
+    ['Dividends and interest', ['Dividends', 'Interest income']],
+    ['Windfall gains', ['Prizes', 'Lottery and gambling winnings']],
+    ['Other incoming funds', ['Scholarships and grants', 'Business and rental income', 'Miscellaneous incoming funds']],
     ['Reimbursements', ['Employer reimbursement', 'Insurance reimbursement', 'Shared-expense repayment']]
   ]},
-  { group: 'Home', colour: '#e6a23c', categories: [
-    ['Housing payment', ['Rent', 'Mortgage interest', 'Mortgage fees']],
-    ['Property charges', ['Council rates', 'Owners corporation', 'Land tax']],
-    ['Utilities', ['Electricity', 'Gas', 'Water']],
-    ['Internet and telephone', ['Home internet', 'Mobile phone', 'Home phone']],
-    ['Maintenance', ['Plumbing', 'Electrical work', 'Painting', 'Gardening', 'Pest control', 'General home repairs']],
-    ['Improvements', ['Renovations', 'Building materials', 'Fixtures', 'Landscaping']],
-    ['Furniture and appliances', ['Furniture', 'Whitegoods', 'Kitchen appliances', 'Home electronics']],
-    ['Household supplies', ['Cleaning products', 'Laundry products', 'Paper products', 'General homewares']],
-    ['Household services', ['Cleaning service', 'Gardening service', 'Security monitoring', 'Waste removal']],
-    ['General home', []]
+  { group: 'Home & household', colour: '#e6a23c', categories: [
+    ['Housing', ['Rent', 'Mortgage payments', 'Home insurance', 'Home maintenance', 'Council rates and taxes', 'Body corporate fees', 'Renovations']],
+    ['Furnishings and equipment', ['Furniture', 'Appliances', 'Linen', 'Kitchenware', 'Household tools']],
+    ['Food and groceries', ['General groceries', 'Meat', 'Fruit and vegetables', 'Pet food', 'Alcohol and tobacco']],
+    ['Utilities', ['Electricity and heating', 'Gas', 'Water and sewerage']],
+    ['Household services', ['Phone', 'Internet', 'Postage', 'Pest control', 'Gardening', 'Swimming pool costs', 'Housekeeping', 'Security']]
   ]},
-  { group: 'Food & drink', colour: '#11a683', categories: [
-    ['Groceries', ['Supermarket', 'Fruit and vegetables', 'Butcher', 'Bakery', 'Seafood', 'Specialty food']],
-    ['Dining out', ['Restaurant', 'Cafe', 'Pub meals', 'Food court']],
-    ['Takeaway', ['Fast food', 'Local takeaway', 'Food delivery']],
-    ['Snacks and drinks', ['Coffee', 'Snacks', 'Non-alcoholic drinks']],
-    ['Alcohol', ['Bottle shop', 'Wine club', 'Brewery']],
-    ['Entertaining', ['Party food', 'Barbecue supplies', 'Special-occasion food']]
+  { group: 'Lifestyle & personal', colour: '#f9735b', categories: [
+    ['Entertainment and recreation', ['Eating out', 'Takeaways', 'Lunches and coffees', 'Home entertainment', 'Computers and software', 'Books and publications', 'Sporting equipment and toys', 'Sporting fees', 'Cinema theatre and concerts', 'Streaming and pay TV', 'Entrance fees', 'Lottery and gambling']],
+    ['Clothing', ['Clothing and footwear', 'Work clothing']],
+    ['Grooming', ['Personal care', 'Toiletries', 'Cosmetics', 'Haircuts']]
   ]},
   { group: 'Transport', colour: '#4f86f7', categories: [
-    ['Fuel and charging', ['Petrol', 'Diesel', 'LPG', 'EV charging']],
-    ['Vehicle registration', ['Registration', 'Driver licence', 'Vehicle inspection']],
-    ['Vehicle maintenance', ['Scheduled service', 'Mechanical repair', 'Tyres', 'Vehicle battery', 'Windscreen']],
-    ['Vehicle accessories', ['Vehicle parts', 'Car accessories', 'Car cleaning']],
-    ['Parking and tolls', ['Parking', 'Road tolls']],
-    ['Public transport', ['Train', 'Tram', 'Bus', 'Ferry', 'Transport pass']],
-    ['Taxi and rideshare', ['Taxi', 'Rideshare']],
-    ['Bicycle', ['Bicycle purchase', 'Bicycle servicing', 'Bicycle parts', 'Bicycle accessories', 'Cycling safety gear']],
-    ['Shared transport', ['Bike share', 'Scooter share', 'Car share']],
-    ['Vehicle hire', ['Car rental', 'Van rental']],
-    ['Other transport', ['Towing', 'Other transport fares']],
-    ['General transport', []]
+    ['Motor vehicles', ['Vehicle payments', 'Fuel', 'Tyres', 'Vehicle registration', 'Vehicle insurance', 'Vehicle maintenance', 'Parking and tolls']],
+    ['Public transport', ['Train', 'Tram', 'Bus', 'Ferry']],
+    ['Bicycle', ['Bicycle purchase', 'Bicycle maintenance', 'Bicycle accessories']],
+    ['Taxi and rideshare', []]
   ]},
-  { group: 'Insurance', colour: '#526b88', categories: [
-    ['Home insurance', ['Building insurance', 'Contents insurance', 'Landlord insurance']],
-    ['Vehicle insurance', ['Comprehensive insurance', 'Third-party property insurance', 'CTP insurance']],
-    ['Health insurance', ['Hospital cover', 'Extras cover', 'Ambulance cover']],
-    ['Personal insurance', ['Life insurance', 'TPD insurance', 'Trauma insurance', 'Income protection']],
-    ['Travel insurance', ['Domestic travel insurance', 'International travel insurance']],
-    ['Pet insurance', ['Pet accident and illness cover', 'Pet routine-care cover']],
-    ['Other insurance', ['Business insurance', 'Product insurance', 'Miscellaneous insurance']]
+  { group: 'Health care', colour: '#df5b86', categories: [
+    ['Health care', ['Health insurance', 'Medicine and natural remedies', 'Doctor and specialist', 'Dental care', 'Optical care', 'Physiotherapy and massage', 'Chiropractic and acupuncture']]
   ]},
-  { group: 'Health', colour: '#df5b86', categories: [
-    ['Medical', ['GP', 'Specialist', 'Hospital care', 'Pathology', 'Medical imaging']],
-    ['Dental', ['Dental check-up', 'Dental treatment', 'Orthodontics']],
-    ['Optical', ['Eye test', 'Glasses', 'Contact lenses']],
-    ['Pharmacy', ['Prescription medicine', 'Non-prescription medicine', 'Medical supplies']],
-    ['Allied health', ['Physiotherapy', 'Psychology', 'Chiropractic', 'Podiatry', 'Occupational therapy']],
-    ['Fitness', ['Gym', 'Fitness classes', 'Sports club', 'Exercise equipment']],
-    ['Wellbeing', ['Massage', 'Meditation', 'Other wellbeing']],
-    ['General health', []]
+  { group: 'Family & education', colour: '#8c6dd7', categories: [
+    ['Schooling', ['Private school fees', 'School books and uniforms', 'School incidentals', 'University expenses', 'Childcare']],
+    ['Child support payments', []],
+    ['Other household expenses', ['Money transferred overseas', 'Support of relatives', 'Pet care', 'Gifts and donations', 'Professional services', 'Miscellaneous household expense']]
   ]},
-  { group: 'Children & education', colour: '#8c6dd7', categories: [
-    ['Childcare', ['Daycare', 'Kindergarten', 'Before-school care', 'After-school care', 'Babysitting']],
-    ['School', ['School fees', 'School uniforms', 'School books', 'School stationery', 'School excursions', 'School camps']],
-    ['Tertiary education', ['University fees', 'TAFE fees', 'Tertiary course materials']],
-    ['Lessons and tutoring', ['Tutoring', 'Music lessons', 'Language lessons']],
-    ['Children activities', ['Children sport', 'Dance lessons', 'Children clubs', 'Children activity equipment']],
-    ['Children general', ['Children clothing', 'Toys', 'Baby supplies', 'Pocket money']],
-    ['Adult education', ['Adult courses', 'Conferences', 'Education books', 'Professional training']]
+  { group: 'Holidays', colour: '#00a0a8', categories: [
+    ['Holidays', ['Domestic airfares', 'International airfares', 'Holiday accommodation', 'Camping fees', 'Holiday activities']]
   ]},
-  { group: 'Personal', colour: '#8b6f47', categories: [
-    ['Clothing', ['Everyday clothing', 'Work clothing', 'Shoes', 'Clothing alterations']],
-    ['Personal care', ['Hairdresser', 'Barber', 'Cosmetics', 'Toiletries', 'Beauty treatments']],
-    ['Electronics', ['Computer', 'Mobile device', 'Tablet', 'Electronic accessories']],
-    ['Gifts', ['Birthday gifts', 'Wedding gifts', 'Christmas gifts', 'Other gifts']],
-    ['Family support', ['Support payments', 'Family care expenses', 'Other family assistance']],
-    ['Other personal', ['Miscellaneous personal spending']],
-    ['General personal', []]
+  { group: 'Financial costs', colour: '#6d4aff', categories: [
+    ['Bank and loan costs', ['Bank fees', 'Credit-card interest and fees', 'Loan interest and fees']],
+    ['Tax payments', ['Income tax payment', 'PAYG instalments', 'Other ATO payment']]
   ]},
-  { group: 'Pets', colour: '#a36b3f', categories: [
-    ['Pet food', ['Regular pet food', 'Pet treats']],
-    ['Veterinary', ['Vet check-up', 'Veterinary treatment', 'Veterinary surgery', 'Pet vaccinations']],
-    ['Pet medication', ['Prescription pet medicine', 'Flea and worm treatment']],
-    ['Pet care', ['Pet grooming', 'Pet boarding', 'Pet walking', 'Pet training']],
-    ['Pet supplies', ['Pet bedding', 'Pet toys', 'Pet leads', 'Other pet equipment']],
-    ['Pet registration', ['Council pet registration', 'Microchipping']]
-  ]},
-  { group: 'Entertainment & recreation', colour: '#f9735b', categories: [
-    ['Entertainment', ['Cinema', 'Theatre', 'Concerts', 'Events']],
-    ['Hobbies', ['Craft supplies', 'Photography', 'Recreational gardening', 'Collecting', 'Other hobbies']],
-    ['Sport and recreation', ['Sports membership', 'Sports entry fees', 'Sports equipment', 'Outdoor activities']],
-    ['Games', ['Video games', 'Game apps', 'Digital game purchases']],
-    ['Books and media', ['Books', 'Magazines', 'Newspapers', 'Audiobooks']],
-    ['Social activities', ['Parties', 'Social clubs', 'Community events']],
-    ['Gambling', ['Lottery', 'Betting', 'Casino']]
-  ]},
-  { group: 'Travel', colour: '#00a0a8', categories: [
-    ['Flights', ['Domestic flights', 'International flights', 'Airline fees']],
-    ['Accommodation', ['Hotel', 'Holiday rental', 'Camping']],
-    ['Tours and attractions', ['Tours', 'Attractions', 'Travel entry fees']],
-    ['Travel administration', ['Passport', 'Visa', 'Travel vaccinations']],
-    ['Travel communications', ['International roaming', 'Travel SIM']],
-    ['Travel supplies', ['Luggage', 'Travel adapters', 'Other travel equipment']]
-  ]},
-  { group: 'Subscriptions', colour: '#4158d0', categories: [
-    ['Video and television', ['Video streaming', 'Pay television', 'Sports streaming']],
-    ['Music and audio', ['Music streaming', 'Podcast subscription']],
-    ['Software', ['Productivity software', 'Security software', 'Creative software']],
-    ['Cloud and online services', ['Cloud storage', 'Website services', 'Domain names']],
-    ['Memberships', ['Professional memberships', 'Community memberships', 'Retail memberships']],
-    ['News and publications', ['News subscription', 'Publication subscription', 'Digital publication']]
-  ]},
-  { group: 'Financial & administrative', colour: '#6d4aff', categories: [
-    ['Bank fees', ['Account fees', 'ATM fees', 'Transaction fees']],
-    ['Credit costs', ['Credit-card interest', 'Credit-card annual fee', 'Credit late fee']],
-    ['Loan interest and fees', ['Personal-loan interest', 'Loan establishment fee', 'Other loan fees']],
-    ['Investment fees', ['Brokerage', 'Investment platform fees', 'Investment management fees']],
-    ['Currency costs', ['Foreign exchange fees', 'International transaction fees']],
-    ['Professional services', ['Accountant', 'Solicitor', 'Financial adviser']],
-    ['Government charges', ['Fines', 'Permits', 'Certificates']],
-    ['Tax payments', ['Income tax payment', 'PAYG instalment', 'Other ATO payment']]
-  ]},
-  { group: 'Giving', colour: '#bd5b18', categories: [
-    ['Charitable giving', ['Deductible donation', 'Non-deductible donation']],
-    ['Community giving', ['Fundraiser', 'Sponsorship', 'Community support']],
-    ['Religious giving', ['Regular religious contribution', 'Special religious contribution']]
+  { group: 'Financial movements', colour: '#7b8794', categories: [
+    ['Superannuation contributions', []],
+    ['Loan repayments', ['Credit-card payment', 'Line-of-credit repayment', 'Personal-loan repayment']],
+    ['Significant purchases', ['Shares', 'Other investments']],
+    ['Bank account deposits', ['Savings deposits', 'Emergency savings', 'Goal savings']],
+    ['Loans received', ['Family loan received', 'Other non-business loan']],
+    ['Account transfers', ['Own-account transfer', 'Joint-account transfer']],
+    ['Cash movements', ['Cash withdrawal', 'Cash deposit']]
   ]}
 ];
 
@@ -138,18 +62,36 @@ const DEFAULT_HOUSEHOLD_TAGS = [
 ];
 
 const LEGACY_CATEGORY_MAP = {
-  'Dining': 'Dining out',
-  'Transport': 'General transport',
-  'Bills & utilities': 'Utilities',
-  'Phone': 'Mobile phone',
-  'Internet': 'Home internet',
-  'Home': 'General home',
-  'Health': 'General health',
-  'Shopping': 'General personal',
-  'Income': 'Other income',
-  'Professional fees': 'Professional services',
-  'Donations': 'Charitable giving'
+  'Dining': 'Entertainment and recreation', 'Dining out': 'Entertainment and recreation',
+  'Takeaway': 'Entertainment and recreation', 'Transport': 'Motor vehicles',
+  'Bills & utilities': 'Utilities', 'Mobile phone': 'Phone', 'Home internet': 'Internet',
+  'Internet and telephone': 'Household services', 'Communications': 'Household services',
+  'Home': 'Housing', 'General home': 'Housing', 'Home maintenance': 'Housing',
+  'Household purchases': 'Furnishings and equipment', 'Groceries': 'Food and groceries',
+  'Alcohol': 'Alcohol and tobacco', 'Health': 'Health care', 'General health': 'Health care',
+  'Medical': 'Health care', 'Pharmacy': 'Health care', 'Allied health': 'Health care',
+  'Fitness': 'Entertainment and recreation', 'Shopping': 'Other household expenses',
+  'General personal': 'Other household expenses', 'Income': 'Other incoming funds',
+  'Other income': 'Other incoming funds', 'Car running': 'Motor vehicles',
+  'General transport': 'Motor vehicles', 'Children': 'Schooling', 'Education': 'Schooling',
+  'Pets': 'Pet care', 'Personal care': 'Grooming', 'Gifts': 'Gifts and donations',
+  'Entertainment': 'Entertainment and recreation', 'Hobbies and recreation': 'Entertainment and recreation',
+  'Subscriptions': 'Entertainment and recreation', 'Travel': 'Holidays',
+  'Home insurance': 'Housing', 'Vehicle insurance': 'Motor vehicles', 'Health insurance': 'Health care',
+  'Life and income protection': 'Health care', 'Bank and card fees': 'Bank and loan costs',
+  'Loan costs': 'Bank and loan costs', 'Professional fees': 'Professional services',
+  'Charitable giving': 'Gifts and donations', 'Donations': 'Gifts and donations'
 };
+
+const MANAGED_CATEGORY_GROUPS = [
+  'Income', 'Home', 'Housing', 'Food', 'Food & groceries', 'Food & drink', 'Transport',
+  'Insurance', 'Health', 'Health care', 'Children & education', 'Education & children',
+  'Family', 'Family & household', 'Personal', 'Pets', 'Entertainment & recreation',
+  'Dining & entertainment', 'Lifestyle', 'Travel', 'Holidays', 'Subscriptions',
+  'Utilities & services', 'Financial & administrative', 'Financial', 'Financial costs',
+  'Financial movements', 'Giving', 'Incoming funds', 'Home & household',
+  'Lifestyle & personal', 'Family & education', 'Transfers', 'Review', 'System'
+];
 
 function householdCategoryRows_() {
   const rows = [];
@@ -164,6 +106,7 @@ function householdCategoryRows_() {
   });
   [
     ['Transfers', 'Transfers', '#7b8794', true, ''],
+    ['Balance adjustment', 'System', '#5f6c7b', true, ''],
     ['Split', 'System', '#5f6c7b', true, ''],
     ['Uncategorised', 'Review', '#9aa5b1', true, '']
   ].forEach(function (row) { appendUniqueCategoryRow_(rows, names, row); });
@@ -182,21 +125,31 @@ function installHouseholdCategorySet() {
   const ss = getSpreadsheet_();
   ensureCurrentSchema_(ss);
   const migrated = migrateLegacyCategories_(ss);
-  const categoryResult = upsertCategoryRows_(ss.getSheetByName(SHEETS.CATEGORIES), householdCategoryRows_());
+  const categoryRows = householdCategoryRows_();
+  const categoryResult = upsertCategoryRows_(ss.getSheetByName(SHEETS.CATEGORIES), categoryRows);
+  const cleanupResult = retireDetailedCategories_(ss, categoryRows);
   const tagResult = upsertDefaultTags_(ss.getSheetByName(SHEETS.TAGS));
   return {
-    ok: true,
-    migratedReferences: migrated,
-    categoriesAdded: categoryResult.added,
-    categoriesUpdated: categoryResult.updated,
-    tagsAdded: tagResult
+    ok: true, migratedReferences: migrated, categoriesAdded: categoryResult.added,
+    categoriesUpdated: categoryResult.updated, categoriesRetired: cleanupResult.retired,
+    transactionsReturnedToReview: cleanupResult.transactions,
+    rulesDisabled: cleanupResult.rules, tagsAdded: tagResult
   };
+}
+
+function installAtoHouseholdCategorySet() {
+  return installHouseholdCategorySet();
+}
+
+function installBasicHouseholdCategorySet() {
+  return installHouseholdCategorySet();
 }
 
 function migrateLegacyCategories_(ss) {
   let changed = 0;
   Object.keys(LEGACY_CATEGORY_MAP).forEach(function (oldName) {
     const newName = LEGACY_CATEGORY_MAP[oldName];
+    if (oldName === newName) return;
     changed += replaceCategoryReferences_(ss, oldName, newName);
     mergeLegacyCategoryRow_(ss.getSheetByName(SHEETS.CATEGORIES), oldName, newName);
   });
@@ -205,26 +158,19 @@ function migrateLegacyCategories_(ss) {
 
 function replaceCategoryReferences_(ss, oldName, newName) {
   let changed = 0;
-  [
-    [SHEETS.TRANSACTIONS, 'Category'], [SHEETS.RULES, 'Category'],
-    [SHEETS.SPLITS, 'Category'], [SHEETS.BUDGETS, 'Category'],
-    [SHEETS.CATEGORIES, 'Parent']
-  ].forEach(function (target) {
-    const sheet = ss.getSheetByName(target[0]);
-    const column = HEADERS[target[0]].indexOf(target[1]) + 1;
-    if (!sheet || !column || sheet.getLastRow() < 2) return;
-    const range = sheet.getRange(2, column, sheet.getLastRow() - 1, 1);
-    const values = range.getValues();
-    let sheetChanged = false;
-    values.forEach(function (row) {
-      if (String(row[0]) === oldName) {
-        row[0] = newName;
-        changed += 1;
-        sheetChanged = true;
-      }
+  [[SHEETS.TRANSACTIONS, 'Category'], [SHEETS.RULES, 'Category'], [SHEETS.SPLITS, 'Category'], [SHEETS.BUDGETS, 'Category'], [SHEETS.CATEGORIES, 'Parent']]
+    .forEach(function (target) {
+      const sheet = ss.getSheetByName(target[0]);
+      const column = HEADERS[target[0]].indexOf(target[1]) + 1;
+      if (!sheet || !column || sheet.getLastRow() < 2) return;
+      const range = sheet.getRange(2, column, sheet.getLastRow() - 1, 1);
+      const values = range.getValues();
+      let sheetChanged = false;
+      values.forEach(function (row) {
+        if (String(row[0]) === oldName) { row[0] = newName; changed += 1; sheetChanged = true; }
+      });
+      if (sheetChanged) range.setValues(values);
     });
-    if (sheetChanged) range.setValues(values);
-  });
   return changed;
 }
 
@@ -232,11 +178,8 @@ function mergeLegacyCategoryRow_(sheet, oldName, newName) {
   const oldRow = findRowByValue_(sheet, 1, oldName);
   if (!oldRow) return;
   const newRow = findRowByValue_(sheet, 1, newName);
-  if (newRow && newRow !== oldRow) {
-    sheet.getRange(oldRow, HEADERS.Categories.indexOf('Active') + 1).setValue(false);
-  } else {
-    sheet.getRange(oldRow, 1).setValue(newName);
-  }
+  if (newRow && newRow !== oldRow) sheet.getRange(oldRow, HEADERS.Categories.indexOf('Active') + 1).setValue(false);
+  else sheet.getRange(oldRow, 1).setValue(newName);
 }
 
 function upsertCategoryRows_(sheet, rows) {
@@ -244,27 +187,72 @@ function upsertCategoryRows_(sheet, rows) {
   let updated = 0;
   rows.forEach(function (row) {
     const rowNumber = findRowByValue_(sheet, 1, row[0]);
-    if (rowNumber) {
-      sheet.getRange(rowNumber, 1, 1, row.length).setValues([row]);
-      updated += 1;
-    } else {
-      sheet.appendRow(row);
-      added += 1;
-    }
+    if (rowNumber) { sheet.getRange(rowNumber, 1, 1, row.length).setValues([row]); updated += 1; }
+    else { sheet.appendRow(row); added += 1; }
   });
   return { added: added, updated: updated };
+}
+
+function retireDetailedCategories_(ss, activeRows) {
+  const active = {};
+  activeRows.forEach(function (row) { active[String(row[0])] = true; });
+  const sheet = ss.getSheetByName(SHEETS.CATEGORIES);
+  const values = sheet.getDataRange().getValues();
+  const headers = values[0];
+  const nameIndex = headers.indexOf('Name');
+  const groupIndex = headers.indexOf('Group');
+  const activeIndex = headers.indexOf('Active');
+  let retired = 0;
+  for (let i = 1; i < values.length; i += 1) {
+    const name = String(values[i][nameIndex] || '');
+    const group = String(values[i][groupIndex] || '');
+    if (!active[name] && MANAGED_CATEGORY_GROUPS.indexOf(group) !== -1 && truthy_(values[i][activeIndex])) {
+      values[i][activeIndex] = false;
+      retired += 1;
+    }
+  }
+  if (values.length > 1) sheet.getRange(2, 1, values.length - 1, headers.length).setValues(values.slice(1));
+  return { retired: retired, transactions: markRetiredTransactionsForReview_(ss, active), rules: disableRetiredCategoryRules_(ss, active) };
+}
+
+function markRetiredTransactionsForReview_(ss, active) {
+  const sheet = ss.getSheetByName(SHEETS.TRANSACTIONS);
+  if (sheet.getLastRow() < 2) return 0;
+  const values = sheet.getDataRange().getValues();
+  const headers = values[0];
+  const categoryIndex = headers.indexOf('Category');
+  const reviewedIndex = headers.indexOf('Reviewed');
+  let changed = 0;
+  for (let i = 1; i < values.length; i += 1) {
+    const category = String(values[i][categoryIndex] || 'Uncategorised');
+    if (!active[category] && truthy_(values[i][reviewedIndex])) { values[i][reviewedIndex] = false; changed += 1; }
+  }
+  sheet.getRange(2, 1, values.length - 1, headers.length).setValues(values.slice(1));
+  return changed;
+}
+
+function disableRetiredCategoryRules_(ss, active) {
+  const sheet = ss.getSheetByName(SHEETS.RULES);
+  if (sheet.getLastRow() < 2) return 0;
+  const values = sheet.getDataRange().getValues();
+  const headers = values[0];
+  const categoryIndex = headers.indexOf('Category');
+  const activeIndex = headers.indexOf('Active');
+  let changed = 0;
+  for (let i = 1; i < values.length; i += 1) {
+    const category = String(values[i][categoryIndex] || 'Uncategorised');
+    if (!active[category] && truthy_(values[i][activeIndex])) { values[i][activeIndex] = false; changed += 1; }
+  }
+  sheet.getRange(2, 1, values.length - 1, headers.length).setValues(values.slice(1));
+  return changed;
 }
 
 function upsertDefaultTags_(sheet) {
   let added = 0;
   DEFAULT_HOUSEHOLD_TAGS.forEach(function (tag) {
     const rowNumber = findRowByValue_(sheet, 1, tag[0]);
-    if (rowNumber) {
-      sheet.getRange(rowNumber, 1, 1, 3).setValues([[tag[0], tag[1], true]]);
-    } else {
-      sheet.appendRow([tag[0], tag[1], true]);
-      added += 1;
-    }
+    if (rowNumber) sheet.getRange(rowNumber, 1, 1, 3).setValues([[tag[0], tag[1], true]]);
+    else { sheet.appendRow([tag[0], tag[1], true]); added += 1; }
   });
   return added;
 }
