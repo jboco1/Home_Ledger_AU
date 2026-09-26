@@ -1,3 +1,4 @@
+<script>
 
   function renderBudget() {
     var year = selectedFyStart();
@@ -27,3 +28,5 @@
     var controls = '<div class="toolbar budget-toolbar"><label>View <select id="budgetMode"><option' + (state.budgetMode === 'Annual' ? ' selected' : '') + '>Annual</option><option' + (state.budgetMode === 'Monthly' ? ' selected' : '') + '>Monthly</option></select></label>' + (state.budgetMode === 'Monthly' ? '<label>Month <select id="budgetMonth">' + monthOptions + '</select></label>' : '') + '</div>';
     return controls + '<div class="stat-grid">' + stat('Total budget', money.format(totalBudget), periodLabel) + stat('Total spent', money.format(totalSpent), 'Transfers excluded') + stat('Budget remaining', money.format(totalBudget - budgetedSpent), 'Budgeted categories only') + stat('Categories budgeted', budgets.length, periodLabel) + '</div><section class="panel"><div class="panel-head"><div><h2>Category budgets</h2><p>Annual and monthly budgets are stored separately.</p></div></div><div class="budget-list">' + rows + '</div></section>';
   }
+
+</script>

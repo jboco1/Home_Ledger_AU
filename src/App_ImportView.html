@@ -1,4 +1,7 @@
+<script>
 
   function renderImport() {
     return '<div class="two-col"><section class="panel"><div class="panel-head"><div><h2>Import a bank CSV</h2><p>Choose the destination account first.</p></div></div><div class="form-grid"><div class="field"><label>Account</label><select id="importAccount">' + options(state.data.accounts.map(function (a) { return a.Name; })) + '</select></div><div class="field"><label>Default owner</label><select id="importOwner">' + options(['Joint', 'You', 'Wife']) + '</select></div></div><label class="dropzone"><span class="upload-icon">↑</span><strong>Choose a CSV file</strong><p>Date, Description and Amount—or Debit/Credit—columns are supported.</p><input id="csvFile" type="file" accept=".csv,text/csv"><button type="button" class="secondary" id="chooseFile">Choose file</button></label><div id="importResult"></div></section><section class="panel"><div class="panel-head"><div><h2>Portable by design</h2><p>Keep an independent copy whenever you want.</p></div></div><div class="bars"><button class="secondary" id="exportData">Export all data</button></div></section></div>';
   }
+
+</script>

@@ -1,3 +1,4 @@
+<script>
 
   function renderDashboard() {
     var tx = fyTransactions();
@@ -62,3 +63,5 @@
     var categoriesPanel = '<section class="panel"><div class="panel-head"><div><h2>Spending by category</h2><p>Parent categories include their subcategory totals.</p></div></div><div class="table-wrap"><table><thead><tr><th>Category</th><th>Subcategory</th><th>Items</th><th style="text-align:right">Spend</th></tr></thead><tbody>' + (categoryRows || '<tr><td colspan="4"><div class="empty">No spending recorded</div></td></tr>') + '</tbody></table></div></section>';
     return '<div class="stat-grid">' + stat('Income', money.format(totalIncome), selectedFyLabel()) + stat('Spending', money.format(totalSpend), 'Transfers excluded') + stat('Net cash flow', money.format(net), net >= 0 ? 'Surplus' : 'Deficit') + stat('Savings rate', savingsRate + '%', 'Net as a share of income') + '</div>' + chartPanel + categoriesPanel;
   }
+
+</script>

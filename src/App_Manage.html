@@ -1,3 +1,4 @@
+<script>
 
   function renderManage() {
     var accountRows = state.data.accounts.map(function (account) {
@@ -17,3 +18,5 @@
       '<section class="panel"><div class="panel-head"><div><h2>Categories</h2><p>Add top-level categories or place a subcategory beneath one.</p></div></div><div class="manage-list">' + categoryRows + '</div><form id="categoryForm" class="form-grid"><div class="field full"><label>Category name</label><input name="name" required></div><div class="field"><label>Parent category</label><select name="parent">' + parentOptions + '</select></div><div class="field"><label>Group</label><select name="group">' + options(['Household', 'Lifestyle', 'Personal', 'Work', 'Tax', 'Income', 'Other']) + '</select></div><div class="field"><label>Colour</label><input name="colour" type="color" value="#4f86f7"></div><div class="field full"><button class="primary" type="submit">Add category</button></div></form></section>' +
       '<section class="panel"><div class="panel-head"><div><h2>Tags</h2><p>Create flexible labels such as Holiday, Reimbursable or Renovation.</p></div></div><div class="manage-list">' + (tagRows || '<div class="empty">No tags yet</div>') + '</div><form id="tagForm" class="form-grid"><div class="field"><label>Tag name</label><input name="name" required></div><div class="field"><label>Colour</label><input name="colour" type="color" value="#18a889"></div><div class="field full"><button class="primary" type="submit">Add tag</button></div></form></section></div>';
   }
+
+</script>

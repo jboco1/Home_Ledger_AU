@@ -1,3 +1,4 @@
+<script>
 
   function renderTax() {
     var tx = taxItems(fyTransactions()).filter(function (t) { return t.amount < 0 && Number(t.deductiblePercent) > 0; });
@@ -39,3 +40,5 @@
     var detail = '<section class="panel"><div class="panel-head"><div><h2>Tax expense detail</h2><p>' + selectedFyLabel() + '</p></div></div><div class="table-wrap"><table><thead><tr><th>Merchant</th><th>Category</th><th>Owner</th><th>Deductible</th></tr></thead><tbody>' + (rows || '<tr><td colspan="4"><div class="empty">No potential deductions recorded</div></td></tr>') + '</tbody></table></div></section>';
     return '<div class="stat-grid">' + cards + stat('Total', money.format(total), 'Before accountant review') + '</div>' + summary + detail;
   }
+
+</script>

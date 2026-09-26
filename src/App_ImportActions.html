@@ -1,3 +1,4 @@
+<script>
 
   function runImport(file) {
     if (!file || !/\.csv$/i.test(file.name)) { toast('Choose a CSV file.'); return; }
@@ -21,3 +22,5 @@
       URL.revokeObjectURL(link.href);
     });
   }
+
+</script>

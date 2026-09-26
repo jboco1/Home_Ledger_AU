@@ -1,3 +1,4 @@
+<script>
 
   function openTransaction(id) {
     var t = state.data.transactions.filter(function (item) { return item.id === id; })[0];
@@ -124,3 +125,5 @@
     for (i = 0; i < fields.length; i += 1) if (fields[i].name) out[fields[i].name] = fields[i].value;
     return out;
   }
+
+</script>
