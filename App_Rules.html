@@ -1,7 +1,0 @@
-
-  function renderRules() {
-    var rows = state.data.rules.map(function (r) {
-      return '<div class="rule"><code>' + escapeHtml(r.Pattern) + '</code><span>' + escapeHtml(categoryNameLabel(r.Category)) + '</span><span>' + escapeHtml(r.Owner || 'Joint') + '</span><span class="chip">' + escapeHtml(r.TaxStatus) + '</span><button class="danger" data-delete-rule="' + escapeHtml(r.Id) + '">Delete</button></div>';
-    }).join('');
-    return '<div class="two-col"><section class="panel"><div class="panel-head"><div><h2>Categorisation rules</h2><p>Known merchants are classified automatically.</p></div></div><div class="rules-list">' + rows + '</div></section><section class="panel"><div class="panel-head"><div><h2>Add a rule</h2></div></div><form id="ruleForm" class="form-grid"><div class="field full"><label>Pattern</label><input name="pattern" required></div><div class="field"><label>Category</label><select name="category">' + categoryOptions(state.data.categories) + '</select></div><div class="field"><label>Owner</label><select name="owner">' + options(['Joint', 'You', 'Wife']) + '</select></div><div class="field"><label>Tax treatment</label><select name="taxStatus">' + options(['Not deductible', 'Needs review', 'Potential deduction', 'Deductible']) + '</select></div><div class="field"><label>Deductible %</label><input name="deductiblePercent" type="number" min="0" max="100" value="0"></div><div class="field full"><button class="primary" type="submit">Save rule</button></div></form></section></div>';
-  }
