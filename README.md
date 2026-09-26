@@ -32,12 +32,7 @@ A private, two-person Australian household finance app built for Google Apps Scr
 1. Go to [script.google.com](https://script.google.com) while signed into the Google account that should own the data.
 2. Create a **New project** and name it `Home Ledger AU`.
 3. In **Project settings**, enable **Show appsscript.json manifest file in editor**.
-4. Replace the generated files with the five project files in this package:
-   - `Code.gs`
-   - `Index.html`
-   - `Styles.html`
-   - `App.html`
-   - `appsscript.json`
+4. Create or replace the project files using the structured files in this package. Keep the filenames exactly as supplied. The numbered `.gs` files form the server, the `App_*.html` files form the browser application, and `Index.html`, `Styles.html` and `appsscript.json` complete the project. See `STRUCTURE.md` for the file map.
 5. Near the top of `Code.gs`, replace the two example addresses in `SETUP_ALLOWED_EMAILS` with your actual Google addresses:
 
    ```javascript
@@ -52,7 +47,7 @@ A private, two-person Australian household finance app built for Google Apps Scr
 
 ## Upgrade an existing installation
 
-Replace `Code.gs`, `Index.html`, `Styles.html` and `App.html` with the V2 files, save, then update the existing web-app deployment using **Deploy → Manage deployments → Edit → New version → Deploy**. Do not run `setupFinanceApp` again. The first page load automatically adds any missing columns and creates the `Splits`, `Tags` and `Budgets` sheets in the existing database.
+Remove the old `Code.gs` and `App.html` only after adding all numbered `.gs` and `App_*.html` files from this package. Replace `Index.html` and `Styles.html`, save, then update the existing web-app deployment using **Deploy → Manage deployments → Edit → New version → Deploy**. Do not run `setupFinanceApp` again. The first page load automatically adds any missing columns and creates the `Splits`, `Tags` and `Budgets` sheets in the existing database.
 
 ## Important deployment note
 

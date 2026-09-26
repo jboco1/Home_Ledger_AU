@@ -1,0 +1,17 @@
+
+  function render() {
+    if (!state.data) return;
+    document.getElementById('reviewBadge').textContent = state.data.transactions.filter(needsReview).length;
+    var html;
+    if (state.view === 'dashboard') html = renderDashboard();
+    else if (state.view === 'summary') html = renderSummary();
+    else if (state.view === 'transactions') html = renderTransactions(false);
+    else if (state.view === 'review') html = renderTransactions(true);
+    else if (state.view === 'tax') html = renderTax();
+    else if (state.view === 'budget') html = renderBudget();
+    else if (state.view === 'rules') html = renderRules();
+    else if (state.view === 'manage') html = renderManage();
+    else html = renderImport();
+    document.getElementById('content').innerHTML = html;
+    bindView();
+  }

@@ -1,0 +1,13 @@
+
+  function renderTransactions(onlyReview) {
+    var tx = state.data.transactions.slice().sort(function (a, b) { return String(b.date).localeCompare(String(a.date)); });
+    if (onlyReview) tx = tx.filter(needsReview);
+    if (state.search) {
+      var query = state.search.toLowerCase();
+      tx = tx.filter(function (t) { return [t.merchant, t.description, t.account, t.category, categoryNameLabel(t.category), t.owner, t.notes, t.tags].join(' ').toLowerCase().indexOf(query) !== -1; });
+    }
+    if (state.category !== 'all') tx = tx.filter(function (t) { return t.category === state.category; });
+    if (state.tag !== 'all') tx = tx.filter(function (t) { return transactionTags(t).indexOf(state.tag) !== -1; });
+    var toolbar = '<div class="toolbar"><input id="transactionSearch" type="search" placeholder="Search transactions" value="' + escapeHtml(state.search) + '"><select id="transactionCategory"><option value="all">All categories</option>' + categoryOptions(state.data.categories, state.category) + '</select><select id="transactionTag"><option value="all">All tags</option>' + options((state.data.tags || []).map(function (t) { return t.Name; }), state.tag) + '</select><span class="chip">' + tx.length + ' shown</span></div>';
+    return '<section class="panel"><div class="panel-head"><div><h2>' + (onlyReview ? 'Transactions needing review' : 'All transactions') + '</h2><p>Search descriptions, accounts, categories, notes and tags.</p></div></div>' + toolbar + transactionTable(tx, true) + '</section>';
+  }

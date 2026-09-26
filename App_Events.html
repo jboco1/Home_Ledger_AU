@@ -1,0 +1,103 @@
+
+  function bindView() {
+    var i;
+    var go = document.querySelectorAll('[data-go]');
+    for (i = 0; i < go.length; i += 1) go[i].onclick = function () { setView(this.getAttribute('data-go')); };
+    var tx = document.querySelectorAll('[data-tx]');
+    for (i = 0; i < tx.length; i += 1) tx[i].onclick = function () { openTransaction(this.getAttribute('data-tx')); };
+    var transactionSearch = document.getElementById('transactionSearch');
+    if (transactionSearch) transactionSearch.oninput = function () {
+      state.search = this.value;
+      render();
+      var replacement = document.getElementById('transactionSearch');
+      if (replacement) { replacement.focus(); replacement.setSelectionRange(replacement.value.length, replacement.value.length); }
+    };
+    var transactionCategory = document.getElementById('transactionCategory');
+    if (transactionCategory) transactionCategory.onchange = function () { state.category = this.value; render(); };
+    var transactionTag = document.getElementById('transactionTag');
+    if (transactionTag) transactionTag.onchange = function () { state.tag = this.value; render(); };
+    var ruleForm = document.getElementById('ruleForm');
+    if (ruleForm) ruleForm.onsubmit = function (event) { event.preventDefault(); server('saveRule', [formObject(ruleForm)], function () { loadData(); toast('Rule saved'); }); };
+    var deleteButtons = document.querySelectorAll('[data-delete-rule]');
+    for (i = 0; i < deleteButtons.length; i += 1) deleteButtons[i].onclick = function () { var id = this.getAttribute('data-delete-rule'); server('deleteRule', [id], function () { loadData(); }); };
+    var choose = document.getElementById('chooseFile');
+    if (choose) choose.onclick = function () { document.getElementById('csvFile').click(); };
+    var file = document.getElementById('csvFile');
+    if (file) file.onchange = function () { runImport(file.files[0]); };
+    var exportButton = document.getElementById('exportData');
+    if (exportButton) exportButton.onclick = exportData;
+    var accountForm = document.getElementById('accountForm');
+    if (accountForm) accountForm.onsubmit = function (event) {
+      event.preventDefault();
+      var payload = formObject(accountForm);
+      var method = payload.id ? 'updateAccount' : 'saveAccount';
+      var message = payload.id ? 'Account updated' : 'Account added';
+      server(method, [payload], function () { loadData(); setView('manage'); toast(message); });
+    };
+    var categoryForm = document.getElementById('categoryForm');
+    if (categoryForm) categoryForm.onsubmit = function (event) { event.preventDefault(); server('saveCategory', [formObject(categoryForm)], function () { loadData(); setView('manage'); toast('Category added'); }); };
+    var tagForm = document.getElementById('tagForm');
+    if (tagForm) tagForm.onsubmit = function (event) { event.preventDefault(); server('saveTag', [formObject(tagForm)], function () { loadData(); setView('manage'); toast('Tag added'); }); };
+    var accountButtons = document.querySelectorAll('[data-archive-account]');
+    for (i = 0; i < accountButtons.length; i += 1) accountButtons[i].onclick = function () { var id = this.getAttribute('data-archive-account'); server('archiveAccount', [id], function () { loadData(); setView('manage'); }); };
+    var editAccountButtons = document.querySelectorAll('[data-edit-account]');
+    for (i = 0; i < editAccountButtons.length; i += 1) editAccountButtons[i].onclick = function () {
+      accountForm.elements.id.value = this.getAttribute('data-edit-account');
+      accountForm.elements.name.value = this.getAttribute('data-name');
+      accountForm.elements.provider.value = this.getAttribute('data-provider');
+      accountForm.elements.type.value = this.getAttribute('data-type');
+      accountForm.elements.owner.value = this.getAttribute('data-owner');
+      document.getElementById('accountSubmit').textContent = 'Save account';
+      document.getElementById('cancelAccountEdit').classList.remove('hidden');
+      accountForm.elements.name.focus();
+    };
+    var cancelAccountEdit = document.getElementById('cancelAccountEdit');
+    if (cancelAccountEdit) cancelAccountEdit.onclick = function () { accountForm.reset(); accountForm.elements.id.value = ''; document.getElementById('accountSubmit').textContent = 'Add account'; this.classList.add('hidden'); };
+    var categoryButtons = document.querySelectorAll('[data-archive-category]');
+    for (i = 0; i < categoryButtons.length; i += 1) categoryButtons[i].onclick = function () { var name = this.getAttribute('data-archive-category'); server('archiveCategory', [name], function () { loadData(); setView('manage'); }); };
+    var tagButtons = document.querySelectorAll('[data-archive-tag]');
+    for (i = 0; i < tagButtons.length; i += 1) tagButtons[i].onclick = function () { var name = this.getAttribute('data-archive-tag'); server('archiveTag', [name], function () { loadData(); setView('manage'); }); };
+    var budgetButtons = document.querySelectorAll('[data-budget-category]');
+    for (i = 0; i < budgetButtons.length; i += 1) budgetButtons[i].onclick = function () {
+      var category = this.getAttribute('data-budget-category');
+      var amount = this.parentNode.querySelector('.budget-input').value;
+      if (amount === '' || isNaN(Number(amount)) || Number(amount) < 0) { toast('Enter a valid budget amount.'); return; }
+      server('saveBudget', [{ category: category, financialYear: selectedFyStart(), amount: Number(amount), periodType: state.budgetMode, periodKey: state.budgetMode === 'Monthly' ? budgetMonthKey() : '' }], function () { loadData(); setView('budget'); toast(state.budgetMode === 'Monthly' ? 'Monthly budget saved' : 'Annual budget saved'); });
+    };
+    var budgetMode = document.getElementById('budgetMode');
+    if (budgetMode) budgetMode.onchange = function () { state.budgetMode = this.value; render(); };
+    var budgetMonth = document.getElementById('budgetMonth');
+    if (budgetMonth) budgetMonth.onchange = function () { state.budgetMonth = this.value; render(); };
+  }
+
+  function buildFySelect() {
+    var select = document.getElementById('fySelect');
+    if (select.options.length) return;
+    var now = new Date();
+    var start = now.getMonth() >= 6 ? now.getFullYear() : now.getFullYear() - 1;
+    var i;
+    for (i = 0; i < 5; i += 1) {
+      var y = start - i;
+      var option = document.createElement('option');
+      option.value = y;
+      option.textContent = 'FY ' + y + '–' + String(y + 1).slice(-2);
+      select.appendChild(option);
+    }
+    select.onchange = render;
+  }
+
+  function init() {
+    document.getElementById('nav').onclick = function (event) {
+      var button = event.target.closest('[data-view]');
+      if (button) setView(button.getAttribute('data-view'));
+    };
+    var jump = document.querySelectorAll('[data-view-jump]');
+    var i;
+    for (i = 0; i < jump.length; i += 1) jump[i].onclick = function () { setView(this.getAttribute('data-view-jump')); };
+    document.getElementById('menuButton').onclick = function () { document.querySelector('.sidebar').classList.add('open'); };
+    document.getElementById('drawerBackdrop').onclick = closeDrawer;
+    loadData();
+  }
+
+  try { init(); } catch (error) { showError(error); }
+}());
