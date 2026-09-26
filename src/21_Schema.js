@@ -7,20 +7,6 @@ function ensureCurrentSchema_(ss) {
   const categories = ss.getSheetByName(SHEETS.CATEGORIES);
   const hasSplit = rowsAsObjects_(categories).some(function (row) { return String(row.Name) === 'Split'; });
   if (!hasSplit) categories.appendRow(['Split', 'System', '#5f6c7b', true]);
-  ensureDefaultSubcategories_(categories);
-}
-
-function ensureDefaultSubcategories_(sheet) {
-  const existing = rowsAsObjects_(sheet).map(function (row) { return String(row.Name).toLowerCase(); });
-  const defaults = [
-    ['Electricity', 'Household', '#f2b544', true, 'Bills & utilities'],
-    ['Gas', 'Household', '#ef7d57', true, 'Bills & utilities'],
-    ['Phone', 'Household', '#4f86f7', true, 'Bills & utilities'],
-    ['Internet', 'Household', '#7257d7', true, 'Bills & utilities']
-  ];
-  defaults.forEach(function (row) {
-    if (existing.indexOf(String(row[0]).toLowerCase()) === -1) sheet.appendRow(row);
-  });
 }
 
 function ensureSheetHeaders_(sheet, requiredHeaders) {
@@ -48,24 +34,17 @@ function seedDefaults_(ss) {
   ];
   ss.getSheetByName(SHEETS.ACCOUNTS).getRange(2, 1, accountRows.length, accountRows[0].length).setValues(accountRows);
 
-  const categoryRows = [
-    ['Groceries', 'Household', '#11a683', true, ''], ['Dining', 'Lifestyle', '#f9735b', true, ''],
-    ['Transport', 'Household', '#4f86f7', true, ''], ['Bills & utilities', 'Household', '#7257d7', true, ''],
-    ['Electricity', 'Household', '#f2b544', true, 'Bills & utilities'], ['Gas', 'Household', '#ef7d57', true, 'Bills & utilities'],
-    ['Phone', 'Household', '#4f86f7', true, 'Bills & utilities'], ['Internet', 'Household', '#7257d7', true, 'Bills & utilities'],
-    ['Home', 'Household', '#e6a23c', true, ''], ['Health', 'Personal', '#df5b86', true, ''],
-    ['Shopping', 'Lifestyle', '#8b6f47', true, ''], ['Income', 'Income', '#14855f', true, ''],
-    ['Transfers', 'Excluded', '#7b8794', true, ''], ['Software', 'Work', '#4158d0', true, ''],
-    ['Professional fees', 'Work', '#6d4aff', true, ''], ['Donations', 'Tax', '#bd5b18', true, ''],
-    ['Uncategorised', 'Review', '#9aa5b1', true, '']
-  ];
+  const categoryRows = householdCategoryRows_();
   ss.getSheetByName(SHEETS.CATEGORIES).getRange(2, 1, categoryRows.length, categoryRows[0].length).setValues(categoryRows);
+
+  const tagRows = DEFAULT_HOUSEHOLD_TAGS.map(function (tag) { return [tag[0], tag[1], true]; });
+  ss.getSheetByName(SHEETS.TAGS).getRange(2, 1, tagRows.length, tagRows[0].length).setValues(tagRows);
 
   const ruleRows = [
     [Utilities.getUuid(), 'WOOLWORTHS', 'contains', '', 'Groceries', 'Joint', 'Not deductible', 0, 80, true, new Date()],
     [Utilities.getUuid(), 'COLES', 'contains', '', 'Groceries', 'Joint', 'Not deductible', 0, 80, true, new Date()],
     [Utilities.getUuid(), 'ALDI', 'contains', '', 'Groceries', 'Joint', 'Not deductible', 0, 80, true, new Date()],
-    [Utilities.getUuid(), 'UBER', 'contains', '', 'Transport', 'Joint', 'Not deductible', 0, 40, true, new Date()],
+    [Utilities.getUuid(), 'UBER', 'contains', '', 'Rideshare', 'Joint', 'Not deductible', 0, 40, true, new Date()],
     [Utilities.getUuid(), 'ADOBE', 'contains', '', 'Software', 'Joint', 'Needs review', 0, 60, true, new Date()]
   ];
   ss.getSheetByName(SHEETS.RULES).getRange(2, 1, ruleRows.length, ruleRows[0].length).setValues(ruleRows);

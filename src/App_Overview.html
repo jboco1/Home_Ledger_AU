@@ -2,8 +2,8 @@
 
   function renderDashboard() {
     var tx = fyTransactions();
-    var income = sum(tx.filter(function (t) { return t.amount > 0; }).map(function (t) { return t.amount; }));
-    var spend = Math.abs(sum(tx.filter(function (t) { return t.amount < 0 && t.category !== 'Transfers'; }).map(function (t) { return t.amount; })));
+    var income = sum(tx.filter(function (t) { return t.amount > 0 && !isTransferCategory(t.category); }).map(function (t) { return t.amount; }));
+    var spend = Math.abs(sum(tx.filter(function (t) { return t.amount < 0 && !isTransferCategory(t.category); }).map(function (t) { return t.amount; })));
     var deductions = sum(taxItems(tx).filter(function (t) { return t.amount < 0; }).map(deductibleValue));
     var reviewCount = tx.filter(needsReview).length;
     var recent = state.data.transactions.slice().sort(function (a, b) { return String(b.date).localeCompare(String(a.date)); }).slice(0, 8);
@@ -17,8 +17,8 @@
     var months = financialYearMonths(selectedFyStart());
     var monthData = months.map(function (key) {
       var monthTransactions = tx.filter(function (t) { return String(t.date).indexOf(key) === 0; });
-      var income = sum(monthTransactions.filter(function (t) { return Number(t.amount) > 0 && t.category !== 'Transfers'; }).map(function (t) { return t.amount; }));
-      var spend = sum(budgetItems(monthTransactions).filter(function (t) { return Number(t.amount) < 0 && t.category !== 'Transfers'; }).map(function (t) { return Math.abs(Number(t.amount)); }));
+      var income = sum(monthTransactions.filter(function (t) { return Number(t.amount) > 0 && !isTransferCategory(t.category); }).map(function (t) { return t.amount; }));
+      var spend = sum(budgetItems(monthTransactions).filter(function (t) { return Number(t.amount) < 0 && !isTransferCategory(t.category); }).map(function (t) { return Math.abs(Number(t.amount)); }));
       return { key: key, income: income, spend: spend };
     });
     var totalIncome = sum(monthData.map(function (item) { return item.income; }));
@@ -33,7 +33,7 @@
     }).join('');
 
     var groups = {};
-    budgetItems(tx).filter(function (item) { return Number(item.amount) < 0 && item.category !== 'Transfers'; }).forEach(function (item) {
+    budgetItems(tx).filter(function (item) { return Number(item.amount) < 0 && !isTransferCategory(item.category); }).forEach(function (item) {
       var category = state.data.categories.filter(function (candidate) { return String(candidate.Name) === String(item.category); })[0];
       var parent = category && category.Parent ? String(category.Parent) : String(category ? category.Name : item.category || 'Uncategorised');
       var categoryName = String(category ? category.Name : item.category || 'Uncategorised');

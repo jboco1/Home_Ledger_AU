@@ -14,8 +14,17 @@
   }
 
   function categoryOptions(categories, current) {
-    return categories.slice().sort(function (a, b) { return categoryLabel(a).localeCompare(categoryLabel(b)); }).map(function (category) {
-      return '<option value="' + escapeHtml(category.Name) + '"' + (String(category.Name) === String(current) ? ' selected' : '') + '>' + escapeHtml(categoryLabel(category)) + '</option>';
+    var grouped = {};
+    categories.forEach(function (category) {
+      var group = String(category.Group || 'Other');
+      if (!grouped[group]) grouped[group] = [];
+      grouped[group].push(category);
+    });
+    return Object.keys(grouped).sort().map(function (group) {
+      var choices = grouped[group].sort(function (a, b) { return categoryLabel(a).localeCompare(categoryLabel(b)); }).map(function (category) {
+        return '<option value="' + escapeHtml(category.Name) + '"' + (String(category.Name) === String(current) ? ' selected' : '') + '>' + escapeHtml(categoryLabel(category)) + '</option>';
+      }).join('');
+      return '<optgroup label="' + escapeHtml(group) + '">' + choices + '</optgroup>';
     }).join('');
   }
 

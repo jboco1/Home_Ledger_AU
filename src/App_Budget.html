@@ -6,12 +6,15 @@
     var sourceTransactions = fyTransactions();
     if (state.budgetMode === 'Monthly') sourceTransactions = sourceTransactions.filter(function (t) { return String(t.date).indexOf(monthKey) === 0; });
     var spending = {};
-    budgetItems(sourceTransactions).filter(function (t) { return Number(t.amount) < 0 && t.category !== 'Transfers'; }).forEach(function (t) { spending[t.category] = (spending[t.category] || 0) + Math.abs(Number(t.amount)); });
+    budgetItems(sourceTransactions).filter(function (t) { return Number(t.amount) < 0 && !isTransferCategory(t.category); }).forEach(function (t) {
+      var budgetCategory = budgetCategoryName(t.category);
+      spending[budgetCategory] = (spending[budgetCategory] || 0) + Math.abs(Number(t.amount));
+    });
     var budgets = (state.data.budgets || []).filter(function (b) {
       var type = String(b.PeriodType || 'Annual');
       return Number(b.FinancialYear) === year && type === state.budgetMode && (type === 'Annual' || String(b.PeriodKey) === monthKey);
     });
-    var rows = state.data.categories.filter(function (c) { return ['Income', 'Transfers', 'Split'].indexOf(String(c.Name)) === -1; }).map(function (category) {
+    var rows = state.data.categories.filter(function (category) { return isBudgetCategory(category) && !category.Parent; }).map(function (category) {
       var budget = budgets.filter(function (b) { return String(b.Category) === String(category.Name); })[0];
       var hasBudget = !!budget;
       var planned = Number(budget ? budget.Amount : 0);

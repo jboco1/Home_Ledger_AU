@@ -86,6 +86,30 @@
     return String(t.tags || '').split(',').map(function (tag) { return tag.trim(); }).filter(Boolean);
   }
 
+  function categoryRecord(name) {
+    return (state.data.categories || []).filter(function (category) {
+      return String(category.Name) === String(name);
+    })[0] || null;
+  }
+
+  function categoryGroup(name) {
+    var category = categoryRecord(name);
+    return category ? String(category.Group || '') : '';
+  }
+
+  function isTransferCategory(name) {
+    return name === 'Transfers' || name === 'Split' || categoryGroup(name) === 'Transfers' || categoryGroup(name) === 'System';
+  }
+
+  function isBudgetCategory(category) {
+    return ['Income', 'Transfers', 'System', 'Review'].indexOf(String(category.Group || '')) === -1;
+  }
+
+  function budgetCategoryName(name) {
+    var category = categoryRecord(name);
+    return category && category.Parent ? String(category.Parent) : String(name);
+  }
+
   function tagChips(t) {
     var names = transactionTags(t);
     return names.map(function (name) {
