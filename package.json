@@ -1,0 +1,15 @@
+{
+  "name": "home_ledger_au",
+  "version": "1.0.0",
+  "description": "A private, two-person Australian household finance app built for Google Apps Script, Google Sheets and Google Drive.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@google/clasp": "^3.4.1"
+  }
+}
