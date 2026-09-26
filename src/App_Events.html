@@ -19,6 +19,19 @@
     if (transactionTag) transactionTag.onchange = function () { state.tag = this.value; render(); };
     var ruleForm = document.getElementById('ruleForm');
     if (ruleForm) ruleForm.onsubmit = function (event) { event.preventDefault(); server('saveRule', [formObject(ruleForm)], function () { loadData(); toast('Rule saved'); }); };
+    var ruleAmountOperator = document.getElementById('ruleAmountOperator');
+    if (ruleAmountOperator) {
+      var updateRuleAmountFields = function () {
+        var operator = ruleAmountOperator.value;
+        var minField = document.getElementById('ruleAmountMinField');
+        var maxField = document.getElementById('ruleAmountMaxField');
+        minField.classList.toggle('hidden', operator === 'none');
+        maxField.classList.toggle('hidden', operator !== 'between');
+        document.getElementById('ruleAmountMinLabel').textContent = operator === 'between' ? 'Minimum amount' : 'Amount';
+      };
+      ruleAmountOperator.onchange = updateRuleAmountFields;
+      updateRuleAmountFields();
+    }
     var deleteButtons = document.querySelectorAll('[data-delete-rule]');
     for (i = 0; i < deleteButtons.length; i += 1) deleteButtons[i].onclick = function () { var id = this.getAttribute('data-delete-rule'); server('deleteRule', [id], function () { loadData(); }); };
     var choose = document.getElementById('chooseFile');

@@ -21,17 +21,17 @@ function importCsv(payload) {
     if (!row.join('').trim()) return;
     const normal = normaliseCsvRow_(row, mapping, payload.account);
     if (!normal) return;
-    const hash = transactionHash_(normal.date, normal.description, normal.amount, payload.account);
+    const hash = transactionHash_(normal.date, normal.description, normal.amount, payload.account, normal.card);
     if (existingHashes.has(hash)) { duplicates += 1; return; }
     existingHashes.add(hash);
-    const classification = classify_(normal.description, payload.account, rules);
+    const classification = classify_(normal.description, normal.amount, payload.account, rules);
     output.push([
       Utilities.getUuid(), normal.date, normal.description, classification.merchant,
       normal.amount, payload.account, classification.owner || payload.owner || 'Joint',
       classification.category || 'Uncategorised', classification.taxStatus || 'Not deductible',
       Number(classification.deductiblePercent || 0), Number(classification.confidence || 0),
       payload.filename || 'CSV import', hash, classification.confidence >= 0.95,
-      '', '', '', now, now, classification.tags || ''
+      '', '', '', now, now, classification.tags || '', normal.card || '', normal.sourceCategory || ''
     ]);
   });
 
@@ -61,7 +61,9 @@ function detectColumns_(headers) {
     description: find(['description', 'transaction details', 'narrative', 'details', 'merchant']),
     amount: find(['amount', 'transaction amount']),
     debit: find(['debit', 'withdrawal', 'debit amount']),
-    credit: find(['credit', 'deposit', 'credit amount'])
+    credit: find(['credit', 'deposit', 'credit amount']),
+    card: find(['card', 'card number', 'card no', 'cardholder', 'card holder', 'card member', 'card name']),
+    sourceCategory: find(['category', 'transaction category', 'bank category', 'source category', 'category name'])
   };
   if (mapping.date < 0 || mapping.description < 0 || (mapping.amount < 0 && mapping.debit < 0 && mapping.credit < 0)) {
     throw new Error('Could not recognise the CSV columns. Include Date, Description and Amount, or Debit/Credit columns.');
@@ -82,5 +84,7 @@ function normaliseCsvRow_(row, mapping, account) {
     amount = credit - debit;
   }
   if (!date || !isFinite(amount) || amount === 0) return null;
-  return { date: date, description: description, amount: amount, account: account };
+  const card = mapping.card >= 0 ? String(row[mapping.card] || '').trim() : '';
+  const sourceCategory = mapping.sourceCategory >= 0 ? String(row[mapping.sourceCategory] || '').trim() : '';
+  return { date: date, description: description, amount: amount, account: account, card: card, sourceCategory: sourceCategory };
 }

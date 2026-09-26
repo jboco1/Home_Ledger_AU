@@ -20,9 +20,9 @@ function parseMoney_(value) {
   return negative ? -Math.abs(number) : number;
 }
 
-function transactionHash_(date, description, amount, account) {
+function transactionHash_(date, description, amount, account, card) {
   const dateText = Utilities.formatDate(new Date(date), 'Australia/Sydney', 'yyyy-MM-dd');
-  const input = [dateText, String(description).trim().toUpperCase(), Number(amount).toFixed(2), String(account)].join('|');
+  const input = [dateText, String(description).trim().toUpperCase(), Number(amount).toFixed(2), String(account), String(card || '').trim().toUpperCase()].join('|');
   const digest = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, input, Utilities.Charset.UTF_8);
   return digest.map(function (byte) { const v = byte < 0 ? byte + 256 : byte; return ('0' + v.toString(16)).slice(-2); }).join('');
 }

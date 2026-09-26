@@ -16,10 +16,10 @@ const SHEETS = {
 };
 
 const HEADERS = {
-  Transactions: ['Id', 'Date', 'Description', 'Merchant', 'Amount', 'Account', 'Owner', 'Category', 'TaxStatus', 'DeductiblePercent', 'Confidence', 'Source', 'ImportHash', 'Reviewed', 'ReceiptFileId', 'ReceiptName', 'Notes', 'CreatedAt', 'UpdatedAt', 'Tags'],
+  Transactions: ['Id', 'Date', 'Description', 'Merchant', 'Amount', 'Account', 'Owner', 'Category', 'TaxStatus', 'DeductiblePercent', 'Confidence', 'Source', 'ImportHash', 'Reviewed', 'ReceiptFileId', 'ReceiptName', 'Notes', 'CreatedAt', 'UpdatedAt', 'Tags', 'Card', 'SourceCategory'],
   Accounts: ['Id', 'Name', 'Type', 'Owner', 'Active', 'Provider'],
   Categories: ['Name', 'Group', 'Colour', 'Active', 'Parent'],
-  Rules: ['Id', 'Pattern', 'MatchType', 'Account', 'Category', 'Owner', 'TaxStatus', 'DeductiblePercent', 'Priority', 'Active', 'CreatedAt', 'Tags'],
+  Rules: ['Id', 'Pattern', 'MatchType', 'Account', 'Category', 'Owner', 'TaxStatus', 'DeductiblePercent', 'Priority', 'Active', 'CreatedAt', 'Tags', 'AmountOperator', 'AmountMin', 'AmountMax'],
   Splits: ['Id', 'TransactionId', 'Amount', 'Category', 'Owner', 'TaxStatus', 'DeductiblePercent', 'Notes', 'CreatedAt'],
   Tags: ['Name', 'Colour', 'Active'],
   Budgets: ['Id', 'FinancialYear', 'Category', 'Amount', 'UpdatedAt', 'PeriodType', 'PeriodKey'],

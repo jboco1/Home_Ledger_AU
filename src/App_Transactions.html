@@ -5,7 +5,7 @@
     if (onlyReview) tx = tx.filter(needsReview);
     if (state.search) {
       var query = state.search.toLowerCase();
-      tx = tx.filter(function (t) { return [t.merchant, t.description, t.account, t.category, categoryNameLabel(t.category), t.owner, t.notes, t.tags].join(' ').toLowerCase().indexOf(query) !== -1; });
+      tx = tx.filter(function (t) { return [t.merchant, t.description, t.account, t.card, t.sourceCategory, t.category, categoryNameLabel(t.category), t.owner, t.notes, t.tags].join(' ').toLowerCase().indexOf(query) !== -1; });
     }
     if (state.category !== 'all') tx = tx.filter(function (t) { return t.category === state.category; });
     if (state.tag !== 'all') tx = tx.filter(function (t) { return transactionTags(t).indexOf(state.tag) !== -1; });

@@ -41,11 +41,11 @@ function seedDefaults_(ss) {
   ss.getSheetByName(SHEETS.TAGS).getRange(2, 1, tagRows.length, tagRows[0].length).setValues(tagRows);
 
   const ruleRows = [
-    [Utilities.getUuid(), 'WOOLWORTHS', 'contains', '', 'Groceries', 'Joint', 'Not deductible', 0, 80, true, new Date()],
-    [Utilities.getUuid(), 'COLES', 'contains', '', 'Groceries', 'Joint', 'Not deductible', 0, 80, true, new Date()],
-    [Utilities.getUuid(), 'ALDI', 'contains', '', 'Groceries', 'Joint', 'Not deductible', 0, 80, true, new Date()],
-    [Utilities.getUuid(), 'UBER', 'contains', '', 'Other transport', 'Joint', 'Not deductible', 0, 40, true, new Date()],
-    [Utilities.getUuid(), 'ADOBE', 'contains', '', 'Entertainment', 'Joint', 'Needs review', 0, 60, true, new Date()]
+    [Utilities.getUuid(), 'WOOLWORTHS', 'contains', '', 'Groceries', 'Joint', 'Not deductible', 0, 80, true, new Date(), '', 'none', '', ''],
+    [Utilities.getUuid(), 'COLES', 'contains', '', 'Groceries', 'Joint', 'Not deductible', 0, 80, true, new Date(), '', 'none', '', ''],
+    [Utilities.getUuid(), 'ALDI', 'contains', '', 'Groceries', 'Joint', 'Not deductible', 0, 80, true, new Date(), '', 'none', '', ''],
+    [Utilities.getUuid(), 'UBER', 'contains', '', 'Other transport', 'Joint', 'Not deductible', 0, 40, true, new Date(), '', 'none', '', ''],
+    [Utilities.getUuid(), 'ADOBE', 'contains', '', 'Entertainment', 'Joint', 'Needs review', 0, 60, true, new Date(), '', 'none', '', '']
   ];
   ss.getSheetByName(SHEETS.RULES).getRange(2, 1, ruleRows.length, ruleRows[0].length).setValues(ruleRows);
   ss.getSheetByName(SHEETS.SETTINGS).getRange(2, 1, 3, 2).setValues([

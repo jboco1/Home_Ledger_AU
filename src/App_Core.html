@@ -98,11 +98,11 @@
   }
 
   function isTransferCategory(name) {
-    return name === 'Transfers' || name === 'Split' || categoryGroup(name) === 'Transfers' || categoryGroup(name) === 'Financial movements' || categoryGroup(name) === 'System';
+    return name === 'Transfers' || name === 'Split' || categoryGroup(name) === 'Transfers' || categoryGroup(name) === 'System';
   }
 
   function isBudgetCategory(category) {
-    return ['Income', 'Incoming funds', 'Transfers', 'Financial movements', 'System', 'Review'].indexOf(String(category.Group || '')) === -1;
+    return ['Income', 'Transfers', 'System', 'Review'].indexOf(String(category.Group || '')) === -1;
   }
 
   function budgetCategoryName(name) {
@@ -211,9 +211,11 @@
     if (!transactions.length) return '<div class="empty"><strong>No transactions found</strong>Import a CSV or change your filters.</div>';
     var rows = transactions.map(function (t) {
       var attrs = clickable ? ' data-tx="' + escapeHtml(t.id) + '" tabindex="0" role="button"' : '';
-      return '<tr' + attrs + '><td><span class="merchant">' + escapeHtml(t.merchant || t.description) + (t.receiptFileId ? ' <span title="Receipt attached">📎</span>' : '') + '</span><span class="sub">' + dateText(t.date) + ' · ' + escapeHtml(t.account) + '</span><span class="tag-list">' + tagChips(t) + '</span></td><td><span class="chip ' + (needsReview(t) ? 'review' : '') + '">' + escapeHtml(categoryNameLabel(t.category)) + '</span></td><td>' + escapeHtml(t.owner || 'Joint') + '</td><td>' + taxChip(t) + '</td><td class="amount ' + (t.amount > 0 ? 'income' : '') + '">' + money.format(t.amount) + '</td></tr>';
+      var card = t.card ? escapeHtml(t.card) : '—';
+      var sourceCategory = t.sourceCategory ? escapeHtml(t.sourceCategory) : '—';
+      return '<tr' + attrs + '><td><span class="merchant">' + escapeHtml(t.merchant || t.description) + (t.receiptFileId ? ' <span title="Receipt attached">📎</span>' : '') + '</span><span class="sub">' + dateText(t.date) + ' · ' + escapeHtml(t.account) + '</span><span class="tag-list">' + tagChips(t) + '</span></td><td><span class="chip ' + (needsReview(t) ? 'review' : '') + '">' + escapeHtml(categoryNameLabel(t.category)) + '</span></td><td>' + sourceCategory + '</td><td>' + escapeHtml(t.owner || 'Joint') + '</td><td>' + card + '</td><td>' + taxChip(t) + '</td><td class="amount ' + (t.amount > 0 ? 'income' : '') + '">' + money.format(t.amount) + '</td></tr>';
     }).join('');
-    return '<div class="table-wrap"><table><thead><tr><th>Merchant</th><th>Category</th><th>Owner</th><th>Tax</th><th style="text-align:right">Amount</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+    return '<div class="table-wrap"><table><thead><tr><th>Merchant</th><th>Category</th><th>Source category</th><th>Owner</th><th>Card</th><th>Tax</th><th style="text-align:right">Amount</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
   }
 
 </script>

@@ -82,6 +82,8 @@
   .rule { display:grid; grid-template-columns:1.1fr .7fr .8fr .7fr auto; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid #edf1f3; }
   .rule:last-child { border-bottom:0; }
   .rule code { font-family:inherit; font-weight:750; color:#163b52; }
+  .rule code strong,.rule code small { display:block; }
+  .rule code small { margin-top:4px; color:var(--muted); font-size:.72rem; font-weight:650; }
   .form-grid { min-width:0; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; padding:22px; }
   .field { display:grid; gap:7px; }
   .field.full { grid-column:1/-1; }
@@ -163,6 +165,8 @@
   .drawer-body { padding:22px; display:grid; gap:17px; }
   .transaction-hero { padding:18px; border-radius:13px; background:#f4f8fa; }
   .transaction-hero strong { font-size:1.18rem; }
+  .transaction-description { display:block; margin-top:9px; color:#415866; font-size:.82rem; line-height:1.4; overflow-wrap:anywhere; }
+  .transaction-description b { display:block; margin-bottom:2px; color:var(--muted); font-size:.68rem; letter-spacing:.04em; text-transform:uppercase; }
   .transaction-hero .amount { font-size:1.75rem; margin-top:10px; text-align:left; }
   .drawer-actions { display:flex; gap:10px; }
   .backdrop { position:fixed; inset:0; z-index:25; background:rgba(6,23,35,.45); backdrop-filter:blur(2px); }
