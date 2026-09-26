@@ -1,5 +1,16 @@
 <script>
 
+  function transactionTagChoice(tag, checked) {
+    return '<label class="tag-choice"><input type="checkbox" name="transactionTag" value="' + escapeHtml(tag.Name) + '"' + (checked ? ' checked' : '') + '><i style="background:' + escapeHtml(tag.Colour || '#18a889') + '"></i>' + escapeHtml(tag.Name) + '</label>';
+  }
+
+  function inlineParentOptions() {
+    var parents = state.data.categories.filter(function (category) {
+      return !category.Parent && ['System', 'Review'].indexOf(String(category.Group)) === -1;
+    });
+    return '<option value="">No parent category</option>' + categoryOptions(parents);
+  }
+
   function openTransaction(id) {
     var t = state.data.transactions.filter(function (item) { return item.id === id; })[0];
     if (!t) return;
@@ -8,15 +19,85 @@
     var drawer = document.getElementById('drawer');
     var existingSplits = transactionSplits(t.id);
     var selectedTags = transactionTags(t);
-    var tagChoices = (state.data.tags || []).map(function (tag) { return '<label class="tag-choice"><input type="checkbox" name="transactionTag" value="' + escapeHtml(tag.Name) + '"' + (selectedTags.indexOf(String(tag.Name)) !== -1 ? ' checked' : '') + '><i style="background:' + escapeHtml(tag.Colour || '#18a889') + '"></i>' + escapeHtml(tag.Name) + '</label>'; }).join('');
-    drawer.innerHTML = '<div class="drawer-head"><h2>Review transaction</h2><button class="icon-button" id="closeDrawer">×</button></div><form id="txForm" class="drawer-body"><div class="transaction-hero"><strong>' + escapeHtml(t.merchant || t.description) + '</strong><span class="sub">' + dateText(t.date) + ' · ' + escapeHtml(t.account) + '</span><div class="amount">' + money.format(t.amount) + '</div></div><div id="standardFields"><div class="field"><label>Category</label><select name="category">' + categoryOptions(categories, t.category) + '</select></div><div class="field"><label>Owner</label><select name="owner">' + options(['Joint', 'You', 'Wife'], t.owner) + '</select></div><div class="field"><label>Tax treatment</label><select name="taxStatus">' + options(['Not deductible', 'Needs review', 'Potential deduction', 'Deductible'], t.taxStatus) + '</select></div><div class="field"><label>Deductible %</label><input name="deductiblePercent" type="number" min="0" max="100" value="' + Number(t.deductiblePercent || 0) + '"></div></div><div class="field"><label>Tags</label><div class="tag-choices">' + (tagChoices || '<span class="sub">Add tags from Manage first.</span>') + '</div></div><div class="field"><label>Notes</label><textarea name="notes">' + escapeHtml(t.notes || '') + '</textarea></div><div class="field receipt-field"><label>Receipt image or PDF</label><input id="receiptInput" type="file" accept="image/*,.pdf,application/pdf"><span class="sub">' + (t.receiptName ? 'Attached: ' + escapeHtml(t.receiptName) : 'Optional · maximum 5 MB') + '</span>' + (t.receiptFileId ? '<button type="button" class="secondary" id="openReceipt">Open attached receipt</button>' : '') + '</div><label><input type="checkbox" id="remember"> Remember this merchant for future imports</label><button type="button" class="secondary" id="toggleSplit">' + (existingSplits.length ? 'Edit split' : 'Split transaction') + '</button><div id="splitEditor" class="split-editor hidden"></div><div><button class="primary" type="submit">Save decision</button></div></form>';
+    var tagChoices = (state.data.tags || []).map(function (tag) { return transactionTagChoice(tag, selectedTags.indexOf(String(tag.Name)) !== -1); }).join('');
+    var groupOptions = options(['Income', 'Home', 'Food', 'Transport', 'Health', 'Family', 'Lifestyle', 'Financial', 'Transfers', 'Other']);
+    drawer.innerHTML = '<div class="drawer-head"><h2>Review transaction</h2><button class="icon-button" id="closeDrawer">×</button></div>' +
+      '<form id="txForm" class="drawer-body"><div class="transaction-hero"><strong>' + escapeHtml(t.merchant || t.description) + '</strong><span class="sub">' + dateText(t.date) + ' · ' + escapeHtml(t.account) + '</span><div class="amount">' + money.format(t.amount) + '</div></div>' +
+      '<div id="standardFields"><div class="field"><label>Category</label><select id="transactionCategorySelect" name="category">' + categoryOptions(categories, t.category) + '</select><button type="button" class="text-button" id="showInlineCategory">+ Add category or subcategory</button><div id="inlineCategoryCreator" class="inline-create hidden"><input id="inlineCategoryName" placeholder="Category name"><select id="inlineCategoryParent">' + inlineParentOptions() + '</select><select id="inlineCategoryGroup">' + groupOptions + '</select><div class="inline-create-actions"><input id="inlineCategoryColour" type="color" value="#4f86f7" aria-label="Category colour"><button type="button" class="secondary" id="createInlineCategory">Add</button></div></div></div>' +
+      '<div class="field"><label>Owner</label><select name="owner">' + options(['Joint', 'You', 'Wife'], t.owner) + '</select></div><div class="field"><label>Tax treatment</label><select name="taxStatus">' + options(['Not deductible', 'Needs review', 'Potential deduction', 'Deductible'], t.taxStatus) + '</select></div><div class="field"><label>Deductible %</label><input name="deductiblePercent" type="number" min="0" max="100" value="' + Number(t.deductiblePercent || 0) + '"></div></div>' +
+      '<div class="field"><label>Tags</label><div class="tag-choices" id="transactionTagChoices">' + (tagChoices || '<span class="sub" id="noTransactionTags">No tags yet.</span>') + '</div><button type="button" class="text-button" id="showInlineTag">+ Add tag</button><div id="inlineTagCreator" class="inline-create inline-create-tag hidden"><input id="inlineTagName" placeholder="Tag name"><input id="inlineTagColour" type="color" value="#18a889" aria-label="Tag colour"><button type="button" class="secondary" id="createInlineTag">Add</button></div></div>' +
+      '<div class="field"><label>Notes</label><textarea name="notes">' + escapeHtml(t.notes || '') + '</textarea></div><div class="field receipt-field"><label>Receipt image or PDF</label><input id="receiptInput" type="file" accept="image/*,.pdf,application/pdf"><span class="sub">' + (t.receiptName ? 'Attached: ' + escapeHtml(t.receiptName) : 'Optional · maximum 5 MB') + '</span>' + (t.receiptFileId ? '<button type="button" class="secondary" id="openReceipt">Open attached receipt</button>' : '') + '</div><label><input type="checkbox" id="remember"> Remember this merchant for future imports</label><button type="button" class="secondary" id="toggleSplit">' + (existingSplits.length ? 'Edit split' : 'Split transaction') + '</button><div id="splitEditor" class="split-editor hidden"></div><div><button class="primary" type="submit">Save decision</button></div></form>';
     document.getElementById('drawerBackdrop').classList.remove('hidden');
     drawer.classList.add('open');
     document.getElementById('closeDrawer').onclick = closeDrawer;
     document.getElementById('txForm').onsubmit = saveTransaction;
+    document.getElementById('showInlineCategory').onclick = function () { document.getElementById('inlineCategoryCreator').classList.toggle('hidden'); };
+    document.getElementById('showInlineTag').onclick = function () { document.getElementById('inlineTagCreator').classList.toggle('hidden'); };
+    document.getElementById('createInlineCategory').onclick = createInlineCategory;
+    document.getElementById('createInlineTag').onclick = createInlineTag;
+    document.getElementById('inlineCategoryParent').onchange = syncInlineCategoryGroup;
     document.getElementById('toggleSplit').onclick = function () { showSplitEditor(t, existingSplits); };
     if (t.receiptFileId) document.getElementById('openReceipt').onclick = function () { openReceipt(t.receiptFileId); };
     if (existingSplits.length) showSplitEditor(t, existingSplits);
+  }
+
+  function syncInlineCategoryGroup() {
+    var parentName = document.getElementById('inlineCategoryParent').value;
+    var group = document.getElementById('inlineCategoryGroup');
+    var parent = categoryRecord(parentName);
+    if (parent) group.value = parent.Group;
+    group.disabled = !!parent;
+  }
+
+  function createInlineCategory() {
+    var nameInput = document.getElementById('inlineCategoryName');
+    var parent = document.getElementById('inlineCategoryParent').value;
+    var group = document.getElementById('inlineCategoryGroup').value;
+    var colour = document.getElementById('inlineCategoryColour').value;
+    var name = nameInput.value.trim();
+    if (!name) { toast('Enter a category name.'); nameInput.focus(); return; }
+    server('saveCategory', [{ name: name, parent: parent, group: group, colour: colour }], function (result) {
+      var created = result && result.category;
+      if (!created) { toast('Category could not be added.'); return; }
+      state.data.categories.push(created);
+      var select = document.getElementById('transactionCategorySelect');
+      select.innerHTML = categoryOptions(state.data.categories, created.Name);
+      select.value = created.Name;
+      refreshSplitCategoryOptions();
+      document.getElementById('inlineCategoryParent').innerHTML = inlineParentOptions();
+      nameInput.value = '';
+      document.getElementById('inlineCategoryCreator').classList.add('hidden');
+      toast(created.Parent ? 'Subcategory added' : 'Category added');
+    }, function (error) { toast(error && error.message ? error.message : String(error)); });
+  }
+
+  function refreshSplitCategoryOptions() {
+    var selects = document.querySelectorAll('.split-category');
+    var categories = state.data.categories.filter(function (category) { return category.Name !== 'Split'; });
+    var i;
+    for (i = 0; i < selects.length; i += 1) {
+      var current = selects[i].value;
+      selects[i].innerHTML = categoryOptions(categories, current);
+      selects[i].value = current;
+    }
+  }
+
+  function createInlineTag() {
+    var nameInput = document.getElementById('inlineTagName');
+    var colour = document.getElementById('inlineTagColour').value;
+    var name = nameInput.value.trim();
+    if (!name) { toast('Enter a tag name.'); nameInput.focus(); return; }
+    server('saveTag', [{ name: name, colour: colour }], function (result) {
+      var created = result && result.tag;
+      if (!created) { toast('Tag could not be added.'); return; }
+      state.data.tags.push(created);
+      var placeholder = document.getElementById('noTransactionTags');
+      if (placeholder) placeholder.remove();
+      document.getElementById('transactionTagChoices').insertAdjacentHTML('beforeend', transactionTagChoice(created, true));
+      nameInput.value = '';
+      document.getElementById('inlineTagCreator').classList.add('hidden');
+      toast('Tag added');
+    }, function (error) { toast(error && error.message ? error.message : String(error)); });
   }
 
   function splitRow(part) {

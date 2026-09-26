@@ -58,6 +58,12 @@
     for (i = 0; i < categoryButtons.length; i += 1) categoryButtons[i].onclick = function () { var name = this.getAttribute('data-archive-category'); server('archiveCategory', [name], function () { loadData(); setView('manage'); }); };
     var tagButtons = document.querySelectorAll('[data-archive-tag]');
     for (i = 0; i < tagButtons.length; i += 1) tagButtons[i].onclick = function () { var name = this.getAttribute('data-archive-tag'); server('archiveTag', [name], function () { loadData(); setView('manage'); }); };
+    var tagColourButtons = document.querySelectorAll('[data-save-tag-colour]');
+    for (i = 0; i < tagColourButtons.length; i += 1) tagColourButtons[i].onclick = function () {
+      var name = this.getAttribute('data-save-tag-colour');
+      var input = this.parentNode.querySelector('.tag-colour-input');
+      server('updateTagColour', [name, input.value], function () { loadData(); setView('manage'); toast('Tag colour updated'); });
+    };
     var budgetButtons = document.querySelectorAll('[data-budget-category]');
     for (i = 0; i < budgetButtons.length; i += 1) budgetButtons[i].onclick = function () {
       var category = this.getAttribute('data-budget-category');
