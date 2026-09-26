@@ -44,8 +44,8 @@ function seedDefaults_(ss) {
     [Utilities.getUuid(), 'WOOLWORTHS', 'contains', '', 'Groceries', 'Joint', 'Not deductible', 0, 80, true, new Date()],
     [Utilities.getUuid(), 'COLES', 'contains', '', 'Groceries', 'Joint', 'Not deductible', 0, 80, true, new Date()],
     [Utilities.getUuid(), 'ALDI', 'contains', '', 'Groceries', 'Joint', 'Not deductible', 0, 80, true, new Date()],
-    [Utilities.getUuid(), 'UBER', 'contains', '', 'Rideshare', 'Joint', 'Not deductible', 0, 40, true, new Date()],
-    [Utilities.getUuid(), 'ADOBE', 'contains', '', 'Software', 'Joint', 'Needs review', 0, 60, true, new Date()]
+    [Utilities.getUuid(), 'UBER', 'contains', '', 'Other transport', 'Joint', 'Not deductible', 0, 40, true, new Date()],
+    [Utilities.getUuid(), 'ADOBE', 'contains', '', 'Entertainment', 'Joint', 'Needs review', 0, 60, true, new Date()]
   ];
   ss.getSheetByName(SHEETS.RULES).getRange(2, 1, ruleRows.length, ruleRows[0].length).setValues(ruleRows);
   ss.getSheetByName(SHEETS.SETTINGS).getRange(2, 1, 3, 2).setValues([
