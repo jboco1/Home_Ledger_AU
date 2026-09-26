@@ -1,0 +1,19 @@
+
+  function options(values, current) {
+    return values.map(function (value) { return '<option' + (String(value) === String(current) ? ' selected' : '') + '>' + escapeHtml(value) + '</option>'; }).join('');
+  }
+
+  function categoryLabel(category) {
+    return category && category.Parent ? String(category.Parent) + ' › ' + String(category.Name) : String(category ? category.Name : '');
+  }
+
+  function categoryNameLabel(name) {
+    var category = state.data.categories.filter(function (item) { return String(item.Name) === String(name); })[0];
+    return category ? categoryLabel(category) : String(name || 'Uncategorised');
+  }
+
+  function categoryOptions(categories, current) {
+    return categories.slice().sort(function (a, b) { return categoryLabel(a).localeCompare(categoryLabel(b)); }).map(function (category) {
+      return '<option value="' + escapeHtml(category.Name) + '"' + (String(category.Name) === String(current) ? ' selected' : '') + '>' + escapeHtml(categoryLabel(category)) + '</option>';
+    }).join('');
+  }

@@ -1,0 +1,126 @@
+
+  function openTransaction(id) {
+    var t = state.data.transactions.filter(function (item) { return item.id === id; })[0];
+    if (!t) return;
+    state.selected = t;
+    var categories = state.data.categories;
+    var drawer = document.getElementById('drawer');
+    var existingSplits = transactionSplits(t.id);
+    var selectedTags = transactionTags(t);
+    var tagChoices = (state.data.tags || []).map(function (tag) { return '<label class="tag-choice"><input type="checkbox" name="transactionTag" value="' + escapeHtml(tag.Name) + '"' + (selectedTags.indexOf(String(tag.Name)) !== -1 ? ' checked' : '') + '><i style="background:' + escapeHtml(tag.Colour || '#18a889') + '"></i>' + escapeHtml(tag.Name) + '</label>'; }).join('');
+    drawer.innerHTML = '<div class="drawer-head"><h2>Review transaction</h2><button class="icon-button" id="closeDrawer">×</button></div><form id="txForm" class="drawer-body"><div class="transaction-hero"><strong>' + escapeHtml(t.merchant || t.description) + '</strong><span class="sub">' + dateText(t.date) + ' · ' + escapeHtml(t.account) + '</span><div class="amount">' + money.format(t.amount) + '</div></div><div id="standardFields"><div class="field"><label>Category</label><select name="category">' + categoryOptions(categories, t.category) + '</select></div><div class="field"><label>Owner</label><select name="owner">' + options(['Joint', 'You', 'Wife'], t.owner) + '</select></div><div class="field"><label>Tax treatment</label><select name="taxStatus">' + options(['Not deductible', 'Needs review', 'Potential deduction', 'Deductible'], t.taxStatus) + '</select></div><div class="field"><label>Deductible %</label><input name="deductiblePercent" type="number" min="0" max="100" value="' + Number(t.deductiblePercent || 0) + '"></div></div><div class="field"><label>Tags</label><div class="tag-choices">' + (tagChoices || '<span class="sub">Add tags from Manage first.</span>') + '</div></div><div class="field"><label>Notes</label><textarea name="notes">' + escapeHtml(t.notes || '') + '</textarea></div><div class="field receipt-field"><label>Receipt image or PDF</label><input id="receiptInput" type="file" accept="image/*,.pdf,application/pdf"><span class="sub">' + (t.receiptName ? 'Attached: ' + escapeHtml(t.receiptName) : 'Optional · maximum 5 MB') + '</span>' + (t.receiptFileId ? '<button type="button" class="secondary" id="openReceipt">Open attached receipt</button>' : '') + '</div><label><input type="checkbox" id="remember"> Remember this merchant for future imports</label><button type="button" class="secondary" id="toggleSplit">' + (existingSplits.length ? 'Edit split' : 'Split transaction') + '</button><div id="splitEditor" class="split-editor hidden"></div><div><button class="primary" type="submit">Save decision</button></div></form>';
+    document.getElementById('drawerBackdrop').classList.remove('hidden');
+    drawer.classList.add('open');
+    document.getElementById('closeDrawer').onclick = closeDrawer;
+    document.getElementById('txForm').onsubmit = saveTransaction;
+    document.getElementById('toggleSplit').onclick = function () { showSplitEditor(t, existingSplits); };
+    if (t.receiptFileId) document.getElementById('openReceipt').onclick = function () { openReceipt(t.receiptFileId); };
+    if (existingSplits.length) showSplitEditor(t, existingSplits);
+  }
+
+  function splitRow(part) {
+    var categories = state.data.categories.filter(function (c) { return c.Name !== 'Split'; });
+    return '<div class="split-row"><input class="split-amount" type="number" min="0.01" step="0.01" value="' + escapeHtml(part.Amount || '') + '" placeholder="Amount"><select class="split-category">' + categoryOptions(categories, part.Category) + '</select><select class="split-owner">' + options(['Joint', 'You', 'Wife'], part.Owner || 'Joint') + '</select><select class="split-tax">' + options(['Not deductible', 'Needs review', 'Potential deduction', 'Deductible'], part.TaxStatus || 'Not deductible') + '</select><input class="split-percent" type="number" min="0" max="100" value="' + Number(part.DeductiblePercent || 0) + '" title="Deductible percentage"><button type="button" class="danger split-remove">×</button></div>';
+  }
+
+  function showSplitEditor(transaction, parts) {
+    var editor = document.getElementById('splitEditor');
+    var amount = Math.abs(Number(transaction.amount));
+    var initial = parts.length ? parts : [{ Amount: (amount / 2).toFixed(2), Owner: transaction.owner }, { Amount: (amount - amount / 2).toFixed(2), Owner: transaction.owner }];
+    editor.classList.remove('hidden');
+    editor.innerHTML = '<div class="split-head"><strong>Split allocation</strong><span>Total must equal ' + money.format(amount) + '</span></div><div id="splitRows">' + initial.map(splitRow).join('') + '</div><div class="split-actions"><button type="button" class="secondary" id="addSplitRow">Add part</button><strong id="splitTotal"></strong></div>';
+    bindSplitRows();
+    document.getElementById('addSplitRow').onclick = function () { document.getElementById('splitRows').insertAdjacentHTML('beforeend', splitRow({ Owner: transaction.owner })); bindSplitRows(); };
+  }
+
+  function bindSplitRows() {
+    var removes = document.querySelectorAll('.split-remove');
+    var amounts = document.querySelectorAll('.split-amount');
+    var i;
+    for (i = 0; i < removes.length; i += 1) removes[i].onclick = function () { this.parentNode.remove(); updateSplitTotal(); };
+    for (i = 0; i < amounts.length; i += 1) amounts[i].oninput = updateSplitTotal;
+    updateSplitTotal();
+  }
+
+  function updateSplitTotal() {
+    var amounts = document.querySelectorAll('.split-amount');
+    var total = 0;
+    var i;
+    for (i = 0; i < amounts.length; i += 1) total += Number(amounts[i].value || 0);
+    var el = document.getElementById('splitTotal');
+    if (el) el.textContent = 'Allocated: ' + money.format(total);
+  }
+
+  function collectSplits() {
+    var rows = document.querySelectorAll('.split-row');
+    var output = [];
+    var i;
+    for (i = 0; i < rows.length; i += 1) {
+      output.push({ amount: Number(rows[i].querySelector('.split-amount').value || 0), category: rows[i].querySelector('.split-category').value, owner: rows[i].querySelector('.split-owner').value, taxStatus: rows[i].querySelector('.split-tax').value, deductiblePercent: Number(rows[i].querySelector('.split-percent').value || 0) });
+    }
+    return output;
+  }
+
+  function closeDrawer() {
+    document.getElementById('drawer').classList.remove('open');
+    document.getElementById('drawerBackdrop').classList.add('hidden');
+  }
+
+  function openReceipt(fileId) {
+    var popup = window.open('about:blank', '_blank');
+    server('getReceiptUrl', [fileId], function (url) {
+      if (popup) popup.location = url;
+      else window.location.href = url;
+    }, function (error) {
+      if (popup) popup.close();
+      showError(error);
+    });
+  }
+
+  function completeTransactionSave(message) {
+    var input = document.getElementById('receiptInput');
+    var file = input && input.files ? input.files[0] : null;
+    function finish() { closeDrawer(); loadData(); toast(message); }
+    if (!file) { finish(); return; }
+    var reader = new FileReader();
+    reader.onload = function () {
+      var encoded = String(reader.result).split(',')[1];
+      server('uploadReceipt', [{ transactionId: state.selected.id, filename: file.name, mimeType: file.type || 'application/octet-stream', base64: encoded }], function () { finish(); });
+    };
+    reader.onerror = function () { toast('The receipt could not be read.'); };
+    reader.readAsDataURL(file);
+  }
+
+  function saveTransaction(event) {
+    event.preventDefault();
+    var form = event.target;
+    var receipt = document.getElementById('receiptInput');
+    var receiptFile = receipt && receipt.files ? receipt.files[0] : null;
+    if (receiptFile && receiptFile.size > 5 * 1024 * 1024) { toast('Receipt must be under 5 MB.'); return; }
+    var checkedTags = form.querySelectorAll('input[name="transactionTag"]:checked');
+    var tags = [];
+    var tagIndex;
+    for (tagIndex = 0; tagIndex < checkedTags.length; tagIndex += 1) tags.push(checkedTags[tagIndex].value);
+    var patch = { id: state.selected.id, category: form.category.value, owner: form.owner.value, taxStatus: form.taxStatus.value, deductiblePercent: Number(form.deductiblePercent.value || 0), notes: form.notes.value, tags: tags, reviewed: true };
+    var splitEditor = document.getElementById('splitEditor');
+    var splits = splitEditor && !splitEditor.classList.contains('hidden') ? collectSplits() : null;
+    server('updateTransaction', [patch], function (result) {
+      var matched = result && Number(result.merchantMatches || 0);
+      var matchNote = matched ? ' · ' + matched + ' matching transaction' + (matched === 1 ? '' : 's') + ' updated' : '';
+      if (splits) {
+        server('saveTransactionSplits', [{ transactionId: state.selected.id, splits: splits }], function () { completeTransactionSave('Split transaction saved' + matchNote); });
+        return;
+      }
+      if (document.getElementById('remember').checked) {
+        server('saveRule', [{ pattern: state.selected.merchant || state.selected.description, matchType: 'contains', account: state.selected.account, category: patch.category, owner: patch.owner, taxStatus: patch.taxStatus, deductiblePercent: patch.deductiblePercent, tags: patch.tags, priority: 70 }], function () { completeTransactionSave('Transaction and rule saved' + matchNote); });
+      } else { completeTransactionSave('Transaction saved' + matchNote); }
+    });
+  }
+
+  function formObject(form) {
+    var out = {};
+    var fields = form.elements;
+    var i;
+    for (i = 0; i < fields.length; i += 1) if (fields[i].name) out[fields[i].name] = fields[i].value;
+    return out;
+  }

@@ -1,0 +1,23 @@
+
+  function runImport(file) {
+    if (!file || !/\.csv$/i.test(file.name)) { toast('Choose a CSV file.'); return; }
+    var reader = new FileReader();
+    reader.onload = function () {
+      server('importCsv', [{ csvText: reader.result, filename: file.name, account: document.getElementById('importAccount').value, owner: document.getElementById('importOwner').value }], function (result) {
+        document.getElementById('importResult').innerHTML = '<div class="import-result">Imported ' + result.imported + ' transactions · skipped ' + result.duplicates + ' duplicates · raw CSV saved</div>';
+        loadData(); toast('Import complete');
+      });
+    };
+    reader.readAsText(file);
+  }
+
+  function exportData() {
+    server('exportAllData', [], function (all) {
+      var text = JSON.stringify(all, null, 2);
+      var link = document.createElement('a');
+      link.href = URL.createObjectURL(new Blob([text], { type: 'application/json' }));
+      link.download = 'home-ledger-au-export.json';
+      link.click();
+      URL.revokeObjectURL(link.href);
+    });
+  }

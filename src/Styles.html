@@ -120,6 +120,22 @@
   .tax-category td { background:#f5f8f9; border-top:1px solid var(--line); }
   .tax-subcategory td:nth-child(2) { padding-left:34px; position:relative; }
   .tax-subcategory td:nth-child(2):before { content:"↳"; position:absolute; left:17px; color:var(--muted); }
+  .chart-legend { display:flex; gap:14px; color:var(--muted); font-size:.78rem; font-weight:700; }
+  .chart-legend span { display:flex; align-items:center; gap:6px; }
+  .chart-legend i { width:10px; height:10px; border-radius:3px; }
+  .income-key,.income-bar { background:var(--teal); }
+  .spend-key,.spend-bar { background:var(--coral); }
+  .monthly-chart-scroll { width:100%; overflow-x:auto; padding:24px 20px 18px; }
+  .monthly-chart { min-width:760px; height:300px; display:grid; grid-template-columns:repeat(12,minmax(52px,1fr)); gap:10px; border-bottom:1px solid var(--line); }
+  .month-column { height:100%; min-width:0; display:grid; grid-template-rows:minmax(0,1fr) auto auto; gap:5px; text-align:center; align-items:end; }
+  .month-bars { height:100%; min-height:0; display:flex; align-items:flex-end; justify-content:center; gap:5px; }
+  .month-bars i { display:block; width:min(18px,38%); min-height:0; border-radius:5px 5px 2px 2px; transition:.2s; }
+  .month-bars i:hover { filter:brightness(.92); }
+  .month-column strong { font-size:.76rem; color:var(--ink); }
+  .month-column > span { color:var(--muted); font-size:.68rem; padding-bottom:5px; }
+  .summary-category td { background:#f5f8f9; border-top:1px solid var(--line); }
+  .summary-subcategory td:nth-child(2) { padding-left:34px; position:relative; }
+  .summary-subcategory td:nth-child(2):before { content:"↳"; position:absolute; left:17px; color:var(--muted); }
   .category-name { display:flex; align-items:center; gap:11px; }
   .category-name i { width:12px; height:32px; border-radius:99px; }
   .subcategory-row .category-name { padding-left:24px; position:relative; }

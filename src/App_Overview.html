@@ -1,0 +1,64 @@
+
+  function renderDashboard() {
+    var tx = fyTransactions();
+    var income = sum(tx.filter(function (t) { return t.amount > 0; }).map(function (t) { return t.amount; }));
+    var spend = Math.abs(sum(tx.filter(function (t) { return t.amount < 0 && t.category !== 'Transfers'; }).map(function (t) { return t.amount; })));
+    var deductions = sum(taxItems(tx).filter(function (t) { return t.amount < 0; }).map(deductibleValue));
+    var reviewCount = tx.filter(needsReview).length;
+    var recent = state.data.transactions.slice().sort(function (a, b) { return String(b.date).localeCompare(String(a.date)); }).slice(0, 8);
+    return '<div class="hero-row"><article class="balance-card"><span class="label">Net cash flow · ' + selectedFyLabel() + '</span><div class="big">' + money.format(income - spend) + '</div><div class="delta">' + (income ? Math.round(((income - spend) / income) * 100) : 0) + '% of income retained</div></article><article class="review-card"><div><div class="number">' + reviewCount + '</div><h2>Transactions need review</h2><p>Confirm categories and tax treatment, then remember repeat merchants.</p></div><button class="secondary" data-go="review">Review now</button></article></div>' +
+      '<div class="stat-grid">' + stat('Income', money.format(income), 'This financial year') + stat('Spending', money.format(spend), 'Transfers excluded') + stat('Potential deductions', money.format(deductions), 'Before accountant review') + stat('Transactions', tx.length, selectedFyLabel()) + '</div>' +
+      '<section class="panel"><div class="panel-head"><div><h2>Recent transactions</h2><p>Your latest imported activity</p></div><button class="secondary" data-go="transactions">View all</button></div>' + transactionTable(recent, false) + '</section>';
+  }
+
+  function renderSummary() {
+    var tx = fyTransactions();
+    var months = financialYearMonths(selectedFyStart());
+    var monthData = months.map(function (key) {
+      var monthTransactions = tx.filter(function (t) { return String(t.date).indexOf(key) === 0; });
+      var income = sum(monthTransactions.filter(function (t) { return Number(t.amount) > 0 && t.category !== 'Transfers'; }).map(function (t) { return t.amount; }));
+      var spend = sum(budgetItems(monthTransactions).filter(function (t) { return Number(t.amount) < 0 && t.category !== 'Transfers'; }).map(function (t) { return Math.abs(Number(t.amount)); }));
+      return { key: key, income: income, spend: spend };
+    });
+    var totalIncome = sum(monthData.map(function (item) { return item.income; }));
+    var totalSpend = sum(monthData.map(function (item) { return item.spend; }));
+    var net = totalIncome - totalSpend;
+    var maxValue = Math.max(1, Math.max.apply(Math, monthData.map(function (item) { return Math.max(item.income, item.spend); })));
+    var chart = monthData.map(function (item) {
+      var incomeHeight = item.income > 0 ? Math.max(2, item.income / maxValue * 100) : 0;
+      var spendHeight = item.spend > 0 ? Math.max(2, item.spend / maxValue * 100) : 0;
+      var shortMonth = monthText(item.key).split(' ')[0].slice(0, 3);
+      return '<div class="month-column"><div class="month-bars"><i class="income-bar" style="height:' + incomeHeight + '%" title="Income ' + escapeHtml(money.format(item.income)) + '"></i><i class="spend-bar" style="height:' + spendHeight + '%" title="Spend ' + escapeHtml(money.format(item.spend)) + '"></i></div><strong>' + escapeHtml(shortMonth) + '</strong><span>' + escapeHtml(item.key.slice(2, 4)) + '</span></div>';
+    }).join('');
+
+    var groups = {};
+    budgetItems(tx).filter(function (item) { return Number(item.amount) < 0 && item.category !== 'Transfers'; }).forEach(function (item) {
+      var category = state.data.categories.filter(function (candidate) { return String(candidate.Name) === String(item.category); })[0];
+      var parent = category && category.Parent ? String(category.Parent) : String(category ? category.Name : item.category || 'Uncategorised');
+      var categoryName = String(category ? category.Name : item.category || 'Uncategorised');
+      if (!groups[parent]) groups[parent] = { total: 0, count: 0, categories: {} };
+      if (!groups[parent].categories[categoryName]) groups[parent].categories[categoryName] = { total: 0, count: 0 };
+      var value = Math.abs(Number(item.amount));
+      groups[parent].total += value;
+      groups[parent].count += 1;
+      groups[parent].categories[categoryName].total += value;
+      groups[parent].categories[categoryName].count += 1;
+    });
+    var categoryRows = Object.keys(groups).sort(function (a, b) { return groups[b].total - groups[a].total; }).map(function (parent) {
+      var group = groups[parent];
+      var names = Object.keys(group.categories).sort(function (a, b) { return group.categories[b].total - group.categories[a].total; });
+      var details = '';
+      if (names.length > 1 || names[0] !== parent) {
+        details = names.map(function (name) {
+          var item = group.categories[name];
+          return '<tr class="summary-subcategory"><td></td><td>' + escapeHtml(name === parent ? 'General' : name) + '</td><td>' + item.count + '</td><td class="amount">' + money.format(item.total) + '</td></tr>';
+        }).join('');
+      }
+      return '<tr class="summary-category"><td><strong>' + escapeHtml(parent) + '</strong></td><td>All subcategories</td><td>' + group.count + '</td><td class="amount"><strong>' + money.format(group.total) + '</strong></td></tr>' + details;
+    }).join('');
+
+    var savingsRate = totalIncome ? Math.round(net / totalIncome * 100) : 0;
+    var chartPanel = '<section class="panel"><div class="panel-head"><div><h2>Income versus spending</h2><p>Monthly totals · transfers excluded · ' + selectedFyLabel() + '</p></div><div class="chart-legend"><span><i class="income-key"></i>Income</span><span><i class="spend-key"></i>Spend</span></div></div><div class="monthly-chart-scroll"><div class="monthly-chart">' + chart + '</div></div></section>';
+    var categoriesPanel = '<section class="panel"><div class="panel-head"><div><h2>Spending by category</h2><p>Parent categories include their subcategory totals.</p></div></div><div class="table-wrap"><table><thead><tr><th>Category</th><th>Subcategory</th><th>Items</th><th style="text-align:right">Spend</th></tr></thead><tbody>' + (categoryRows || '<tr><td colspan="4"><div class="empty">No spending recorded</div></td></tr>') + '</tbody></table></div></section>';
+    return '<div class="stat-grid">' + stat('Income', money.format(totalIncome), selectedFyLabel()) + stat('Spending', money.format(totalSpend), 'Transfers excluded') + stat('Net cash flow', money.format(net), net >= 0 ? 'Surplus' : 'Deficit') + stat('Savings rate', savingsRate + '%', 'Net as a share of income') + '</div>' + chartPanel + categoriesPanel;
+  }

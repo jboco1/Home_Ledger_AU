@@ -13,6 +13,7 @@
         <div class="brand"><span class="brand-mark">H</span><span>Home Ledger <b>AU</b></span></div>
         <nav id="nav" aria-label="Main navigation">
           <button class="nav-item active" data-view="dashboard"><span>◫</span>Overview</button>
+          <button class="nav-item" data-view="summary"><span>▥</span>Income & spend</button>
           <button class="nav-item" data-view="transactions"><span>≡</span>Transactions</button>
           <button class="nav-item" data-view="review"><span>✓</span>Review <i id="reviewBadge">0</i></button>
           <button class="nav-item" data-view="tax"><span>％</span>Tax</button>
@@ -45,6 +46,20 @@
     <aside id="drawer" class="drawer" aria-label="Edit transaction" aria-hidden="true"></aside>
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
     <div id="loading" class="loading"><div class="loader-mark">H</div><p>Opening your ledger…</p></div>
-    <?!= include('App'); ?>
+    <script>
+    <?!= include('App_Core'); ?>
+    <?!= include('App_Overview'); ?>
+    <?!= include('App_Transactions'); ?>
+    <?!= include('App_Budget'); ?>
+    <?!= include('App_Tax'); ?>
+    <?!= include('App_FormHelpers'); ?>
+    <?!= include('App_Rules'); ?>
+    <?!= include('App_ImportView'); ?>
+    <?!= include('App_Manage'); ?>
+    <?!= include('App_Router'); ?>
+    <?!= include('App_TransactionEditor'); ?>
+    <?!= include('App_ImportActions'); ?>
+    <?!= include('App_Events'); ?>
+    </script>
   </body>
 </html>
